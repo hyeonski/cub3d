@@ -40,7 +40,7 @@ int		draw_grid(t_window *window)
 	int	i;
 
 	i = 1;
-	while (i< window->row_count)
+	while (i < window->row_count)
 	{
 		draw_position = 0;
 		while (draw_position <= window->width){
