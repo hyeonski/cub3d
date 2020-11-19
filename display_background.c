@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   display_background.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 15:53:34 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/11/18 21:36:42 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/11/18 21:49:12 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int		draw_grid(t_window *window)
 	int	i;
 
 	i = 1;
-	while (i < window->row_count)
+	while (i< window->row_count)
 	{
 		draw_position = 0;
 		while (draw_position <= window->width){
