@@ -13,6 +13,7 @@ The goal of cub3d is to make something using raycast like Wolfenstein 3D, or Doo
 Dev Schedule
 
 1. 20/11/16 ~ 20/11/22 Get Familiar with miniLibX
-2. 20/11/23 ~ 20/12/06 Implement DDA & Map Parser
-3. 20/12/07 ~ 20/12/13 Norm Check & Think about Bonus
+2. 20/11/23 ~ 20/11/26 Map Draw & Player Move
+3. 20/11/30 ~ 20/12/13 Implement DDA & Map Parser
+4. 20/12/14 ~ 20/12/20 Norm Check & Think about Bonus
 
