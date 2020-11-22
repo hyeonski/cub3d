@@ -26,6 +26,7 @@ typedef struct	s_background
 
 typedef struct	s_map
 {
+	int			map[ROWS][COLS];
 	int			width;
 	int			height;
 	int			color;
@@ -40,16 +41,17 @@ typedef struct	s_map
 
 typedef struct	s_window
 {
-	void            *mlx;
-	void            *win;
+	int		width;
+	int		height;
+}				t_window;
+
+typedef struct 	s_game
+{
+	void	*mlx;
+	void	*win;
+
 	t_player        player;
     t_background    background;
 	t_map			map;
-
-	int		width;
-	int		height;
-
-	int		row_count;
-	int		column_count;
-	int		grid_color;
-}				t_window;
+	t_window		window;
+}				t_game;

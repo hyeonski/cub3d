@@ -10,12 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#define ROWS 8
+#define COLS 8
+#define TILE_SIZE 32
 #include <mlx.h>
 #include <stdlib.h>
 #include "key_macos.h"
 #include "cub3d.h"
 
-void draw_player(t_window *window)
+void draw_player(t_game *game)
 {
 	int i;
 	int j;
@@ -26,147 +29,158 @@ void draw_player(t_window *window)
 		j = 0;
 		while (j < 9)
 		{
-			window->player.data[i * 9 + j] = window->player.color;
+			game->player.data[i * 9 + j] = game->player.color;
 			j++;
 		}
 		i++;
 	}
-	mlx_put_image_to_window(window->mlx, window->win, window->player.imgptr, window->player.x, window->player.y);
+	mlx_put_image_to_window(game->mlx, game->win, game->player.imgptr, game->player.x, game->player.y);
 }
 
-void draw_background(t_window *window)
+void draw_background(t_game *game)
 {
 	int i;
 	int j;
 
 	i = 0;
-	while (i < window->background.width)
+	while (i < game->background.width)
 	{
 		j = 0;
-		while (j < window->background.height)
+		while (j < game->background.height)
 		{
-			window->background.data[i * window->background.width + j] = window->background.color;
+			game->background.data[i * game->background.width + j] = game->background.color;
 			j++;
 		}
 		i++;
 	}
-	mlx_put_image_to_window(window->mlx, window->win, window->background.imgptr, 0, 0);
+	mlx_put_image_to_window(game->mlx, game->win, game->background.imgptr, 0, 0);
 }
 
-void init_player(t_window *window)
+void init_player(t_game *game)
 {
-	window->player.x = 255;
-	window->player.y = 255;
-	window->player.color = 0xFF0000;
-	window->player.imgptr = mlx_new_image(window->mlx, 9, 9);
-	window->player.data = (int *)mlx_get_data_addr(window->player.imgptr, &window->player.bpp, &window->player.size_l, &window->player.endian);
-	draw_player(window);
+	game->player.x = 255;
+	game->player.y = 255;
+	game->player.color = 0xFF0000;
+	game->player.imgptr = mlx_new_image(game->mlx, 9, 9);
+	game->player.data = (int *)mlx_get_data_addr(game->player.imgptr, &game->player.bpp, &game->player.size_l, &game->player.endian);
+	draw_player(game);
 }
 
-void init_background(t_window *window)
+void init_background(t_game *game)
 {
 	int i;
 	int j;
 
-	window->background.width = 500;
-	window->background.height = 500;
-	window->background.color = 0x000000;
-	window->background.imgptr = mlx_new_image(window->mlx, window->background.width, window->background.height);
-	window->background.data = (int *)mlx_get_data_addr(window->background.imgptr, &window->background.bpp, &window->background.size_l, &window->background.endian);
-	draw_background(window);
+	game->background.width = 500;
+	game->background.height = 500;
+	game->background.color = 0x000000;
+	game->background.imgptr = mlx_new_image(game->mlx, game->background.width, game->background.height);
+	game->background.data = (int *)mlx_get_data_addr(game->background.imgptr, &game->background.bpp, &game->background.size_l, &game->background.endian);
+	draw_background(game);
 }
 
-int map[8][8] = 
-{
+void	game_init(t_game *game)
+{	
+	int map[ROWS][COLS] = {
 	{1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 0, 1, 0, 0, 0, 0, 1},
-	{1, 0, 1, 0, 0, 0, 0, 1},
-	{1, 0, 1, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 1},
 	{1, 0, 0, 0, 0, 1, 0, 1},
-	{1, 0, 0, 0, 0, 1, 0, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1},
-};
+	{1, 0, 1, 0, 0, 1, 0, 1},
+	{1, 1, 0, 0, 0, 0, 0, 1},
+	{1, 1, 0, 0, 0, 0, 0, 1},
+	{1, 1, 0, 0, 0, 0, 0, 1},
+	{1, 1, 0, 0, 0, 0, 0, 1},
+	{1, 1, 1, 1, 1, 1, 1, 1}
+	};
+	memcpy(game->map.map, map, sizeof(int) * ROWS * COLS);
+}
 
-void draw_map(t_window *window)
+void 	draw_lines(t_game *game)
 {
 	int		i;
 	int		j;
-	int		x;
-	int		y;
-
-	window->map.block_size = window->height / 8;
-	window->map.imgptr = mlx_new_image(window->mlx, window->map.block_size, window->map.block_size);
-	window->map.data = (int *)mlx_get_data_addr(block, &window->map.bpp, &window->map.size_l, &window->map.endian);
 
 	i = 0;
-	while (i < 8)
+	while (i < COLS)
+	{
+		draw_line(game, i * TILE_SIZE, 0, i * TILE_SIZE, HEIGHT);
+		i++;
+	}
+	draw_line(game, COLS * TILE_SIZE - 1, 0, COLS * TILE_SIZE - 1, HEIGHT);
+	j = 0;
+	while (j < ROWS)
+	{
+		draw_line(game, 0, j * TILE_SIZE, WIDTH, j * TILE_SIZE);
+		j++;
+	}
+	draw_line(game, 0, ROWS * TILE_SIZE - 1, WIDTH, ROWS * TILE_SIZE - 1);
+}
+
+void	draw_rectangle(t_game *game, int x, int y)
+{
+	int i;
+	int j;
+
+	x *= TILE_SIZE;
+	y *= TILE_SIZE;
+	i = 0;
+	while (i < TILE_SIZE)
 	{
 		j = 0;
-		while (j < 8)
+		while (j < TILE_SIZE)
 		{
-			if (map[i][j] == 1)
-			{
-				window->background.data[i * window->background.width + j] = window->background.color;
-			}
+			game->img.data[(y  + i) * WIDTH + x + j] = 0xFFFFFF;
+			j++;
 		}
+		i++;
 	}
 }
 
-int		draw_grid(t_window *window)
+void	draw_rectangles(t_game *game)
 {
-	int	draw_position;
-	int	i;
+	int		i;
+	int		j;
 
-	i = 1;
-	while (i < window->row_count)
+	i = 0;
+	while (i < ROWS)
 	{
-		draw_position = 0;
-		while (draw_position <= window->width){
-			mlx_pixel_put(window->mlx, window->win, draw_position, i * (window->height / window->row_count),window->grid_color);
-			draw_position++;
+		j = 0;
+		while (j < COLS)
+		{
+			if (game->map[i][j] == 1)
+				draw_rectangle(game, j, i);
+			j++;
 		}
 		i++;
 	}
-	i = 1;
-	while (i< window->column_count)
-	{
-		draw_position = 0;
-		while (draw_position <= window->width){
-			mlx_pixel_put(window->mlx, window->win, i * (window->width/ window->column_count), draw_position,window->grid_color);
-			draw_position++;
-		}
-		i++;
-	}
-	return (0);
 }
 
-int		press_key_for_dot(int key, t_window *window)
+
+int		press_key_for_dot(int key, t_game *game)
 {
 	if (key == K_A)
-		window->player.x -= 5;
+		game->player.x -= 5;
 	if (key == K_D)
-		window->player.x += 5;
+		game->player.x += 5;
 	if (key == K_W)
-		window->player.y -= 5;
+		game->player.y -= 5;
 	if (key == K_S)
-		window->player.y += 5;
+		game->player.y += 5;
 	if (key == K_ESC)
 		exit(0);
-	draw_background(window);
-	draw_player(window);
+	draw_background(game);
+	draw_player(game);
 	return (0);
 }
 
 int		main(void)
 {
-	t_window window;
-	window.width = 500;
-	window.height = 500;
-	window.mlx = mlx_init();
-	window.win = mlx_new_window(window.mlx, window.width, window.height, "mlx_grid");
-	init_background(&window);
-	init_player(&window);
-	mlx_hook(window.win, 2, 1, press_key_for_dot, &window);
-	mlx_loop(window.mlx);
+	t_game game;
+	game.window.width = 500;
+	game.window.height = 500;
+	game.mlx = mlx_init();
+	game.win = mlx_new_game(game.mlx, game.window.width, game.window.height, "cub3d");
+	init_background(&game);
+	init_player(&game);
+	mlx_hook(game.win, 2, 1, press_key_for_dot, &game);
+	mlx_loop(game.mlx);
 }
