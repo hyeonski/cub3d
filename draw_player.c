@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   draw_player.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyeonski <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 15:53:34 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/11/18 15:15:50 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/11/23 12:58:29 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,82 +78,6 @@ void init_background(t_game *game)
 	game->background.data = (int *)mlx_get_data_addr(game->background.imgptr, &game->background.bpp, &game->background.size_l, &game->background.endian);
 	draw_background(game);
 }
-
-void	game_init(t_game *game)
-{	
-	int map[ROWS][COLS] = {
-	{1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 0, 0, 0, 0, 1, 0, 1},
-	{1, 0, 1, 0, 0, 1, 0, 1},
-	{1, 1, 0, 0, 0, 0, 0, 1},
-	{1, 1, 0, 0, 0, 0, 0, 1},
-	{1, 1, 0, 0, 0, 0, 0, 1},
-	{1, 1, 0, 0, 0, 0, 0, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1}
-	};
-	memcpy(game->map.map, map, sizeof(int) * ROWS * COLS);
-}
-
-void 	draw_lines(t_game *game)
-{
-	int		i;
-	int		j;
-
-	i = 0;
-	while (i < COLS)
-	{
-		draw_line(game, i * TILE_SIZE, 0, i * TILE_SIZE, HEIGHT);
-		i++;
-	}
-	draw_line(game, COLS * TILE_SIZE - 1, 0, COLS * TILE_SIZE - 1, HEIGHT);
-	j = 0;
-	while (j < ROWS)
-	{
-		draw_line(game, 0, j * TILE_SIZE, WIDTH, j * TILE_SIZE);
-		j++;
-	}
-	draw_line(game, 0, ROWS * TILE_SIZE - 1, WIDTH, ROWS * TILE_SIZE - 1);
-}
-
-void	draw_rectangle(t_game *game, int x, int y)
-{
-	int i;
-	int j;
-
-	x *= TILE_SIZE;
-	y *= TILE_SIZE;
-	i = 0;
-	while (i < TILE_SIZE)
-	{
-		j = 0;
-		while (j < TILE_SIZE)
-		{
-			game->img.data[(y  + i) * WIDTH + x + j] = 0xFFFFFF;
-			j++;
-		}
-		i++;
-	}
-}
-
-void	draw_rectangles(t_game *game)
-{
-	int		i;
-	int		j;
-
-	i = 0;
-	while (i < ROWS)
-	{
-		j = 0;
-		while (j < COLS)
-		{
-			if (game->map[i][j] == 1)
-				draw_rectangle(game, j, i);
-			j++;
-		}
-		i++;
-	}
-}
-
 
 int		press_key_for_dot(int key, t_game *game)
 {
