@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   temp.c                                             :+:      :+:    :+:   */
+/*   draw_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/23 10:30:42 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/11/23 12:57:29 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/11/27 17:06:04 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	draw_player(t_game *game)
 		{
 			game->player.data[i * game->player.width + j] = game->player.color;
 			j++;
-		}
+		}	
 		i++;
 	}
 	mlx_put_image_to_window(game->mlx, game->win, game->player.imgptr, game->player.x, game->player.y);
