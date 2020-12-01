@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/23 10:30:42 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/11/27 22:06:16 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/01 16:10:35 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,20 @@
 #define TILESIZE 50
 #define MAPWIDTH TILESIZE * COLS
 #define	MAPHEIGHT TILESIZE * ROWS
+#define PI 3.1415926535
+#define P2 PI / 2
+#define P3 3 * PI / 2
+#define DR 0.0174533
+#define TO_COORD(X, Y) ((int)floor(Y) * MAPWIDTH + (int)floor(X))
 
-#include <mlx.h>
+#include "mlx.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include "key_macos.h"
 #include "cub3d.h"
+#include <math.h>
+
 
 void	draw_rectangle(t_game *game, int x, int y)
 {

@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw_map.c                                         :+:      :+:    :+:   */
+/*   grid.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/23 07:10:47 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/11/23 12:58:19 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/01 16:20:07 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <math.h>
 
-# define TO_COORD(X, Y) ((int)floor(Y) * WIDTH + (int)floor(X))
 
 //Draw the line by DDA algorithm
 void	draw_line(t_game *game, double x1, double y1, double x2, double y2)
