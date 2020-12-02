@@ -1,5 +1,7 @@
 typedef struct	s_tile
 {
+	int		grid_color;
+	
 	void	*imgptr;
 	int		*data;
 
@@ -10,8 +12,12 @@ typedef struct	s_tile
 
 typedef struct  s_player
 {
-    int			x;
-	int			y;
+    double		px;
+	double		py;
+	double		pdx;
+	double		pdy;
+	double		pa;
+
 	int			width;
 	int			height;
 	int			color;

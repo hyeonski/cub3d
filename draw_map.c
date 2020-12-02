@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/23 10:30:42 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/01 16:10:35 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/02 15:47:35 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,60 @@
 #include "cub3d.h"
 #include <math.h>
 
+void	draw_line(t_game *game, double x1, double y1, double x2, double y2, int color)
+{
+	double	deltaX;
+	double	deltaY;
+	double	step;
+	deltaX = x2 - x1;
+	deltaY = y2 - y1;
+	step = (fabs(deltaX) > fabs(deltaY)) ? fabs(deltaX) : fabs(deltaY);
+	if (step != 0)
+	{
+		deltaX /= step;
+		deltaY /= step;
+		while (fabs(x2 - x1) > 0.01 || fabs(y2 - y1) > 0.01)
+		{
+			game->tile.data[TO_COORD(x1, y1)] = color;
+			x1 += deltaX;
+			y1 += deltaY;
+		}
+	}
+}
+
+double			dist(double ax, double ay, double bx, double by)
+{
+	return ( sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
+}
+
+void			draw_grid(t_game *game)
+{
+	int			draw_position;
+	int			index;
+
+	index = 1;
+	while (index < ROWS)
+	{
+		draw_position = 0;
+		while (draw_position <= MAPWIDTH)
+		{
+			game->tile.data[index * (MAPWIDTH * MAPHEIGHT / ROWS) + draw_position] = game->tile.grid_color;
+			draw_position++;
+		}
+		index++;
+	}
+	index = 1;
+	while (index < COLS)
+	{
+		draw_position = 0;
+		while (draw_position <= MAPHEIGHT)
+		{
+			game->tile.data[index * (MAPWIDTH / COLS) + draw_position * (MAPWIDTH)] = game->tile.grid_color;
+			draw_position++;
+		}
+		index++;
+	}
+}
 
 void	draw_rectangle(t_game *game, int x, int y)
 {
@@ -67,6 +121,7 @@ void	draw_rectangles(t_game *game)
 		}
 		i++;
 	}
+	draw_grid(game);
 }
 void	draw_player(t_game *game)
 {
@@ -84,13 +139,16 @@ void	draw_player(t_game *game)
 		}	
 		i++;
 	}
-	mlx_put_image_to_window(game->mlx, game->win, game->player.imgptr, game->player.x, game->player.y);
+	mlx_put_image_to_window(game->mlx, game->win, game->player.imgptr, game->player.px, game->player.py);
 }
 
 void	init_player(t_game *game)
 {
-	game->player.x = (COLS / 2) * TILESIZE;
-	game->player.y = (ROWS / 2) * TILESIZE;
+	game->player.px = (COLS / 2) * TILESIZE;
+	game->player.py = (ROWS / 2) * TILESIZE;
+	game->player.pa = P3;
+	game->player.pdx = cos(game->player.pa) * 5;
+	game->player.pdy = sin(game->player.pa) * 5;
 	game->player.color = 0xFF0000;
 	game->player.width = 5;
 	game->player.height = 5;
@@ -114,6 +172,7 @@ void	map_init(t_game *game)
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 	};
 	memcpy(game->map, map, sizeof(int) * ROWS * COLS);
+	game->tile.grid_color = 0xb3b3b3;
 	game->tile.imgptr = mlx_new_image(game->mlx, MAPWIDTH, MAPHEIGHT);
 	game->tile.data = (int *)mlx_get_data_addr(game->tile.imgptr, &game->tile.bpp, &game->tile.size_l, &game->tile.endian);
 }
@@ -127,14 +186,42 @@ void	window_init(t_game *game)
 int		key_input(int key, t_game *game)
 {
 	if (key == KEY_A)
-		game->player.x -= 5;
+	{
+		game->player.px += (int)(cos(game->player.pa - (PI / 2)) * 5);
+		game->player.py += (int)(sin(game->player.pa - (PI / 2)) * 5);
+	}
 	if (key == KEY_D)
-		game->player.x += 5;
+	{
+		game->player.px += (int)(cos(game->player.pa + (PI / 2)) * 5);
+		game->player.py += (int)(sin(game->player.pa + (PI / 2)) * 5);
+	}
 	if (key == KEY_W)
-		game->player.y -= 5;
+	{
+		game->player.px += (int)game->player.pdx;
+		game->player.py += (int)game->player.pdy;
+	}
 	if (key == KEY_S)
-		game->player.y += 5;
-	if (key == KEY_ESC)
+	{
+		game->player.px -= (int)game->player.pdx;
+		game->player.py -= (int)game->player.pdy;
+	}
+	if (key == KEY_AR_L)
+	{
+		game->player.pa -= 0.1;
+		if (game->player.pa < 0)
+			game->player.pa += 2 * PI;
+		game->player.pdx = cos(game->player.pa) * 5;
+		game->player.pdy = sin(game->player.pa) * 5;
+	}
+	if (key == KEY_AR_R)
+	{
+		game->player.pa += 0.1;
+		if (game->player.pa > 2 * PI)
+			game->player.pa -= 2 * PI;
+		game->player.pdx = cos(game->player.pa) * 5;
+		game->player.pdy = sin(game->player.pa) * 5;
+	}
+	if (key == KEY_ESC) 
 		exit(0);
 	return (0);
 }
