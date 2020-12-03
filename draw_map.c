@@ -6,20 +6,22 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/23 10:30:42 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/02 15:47:35 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/02 17:57:09 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define ROWS 10
-#define COLS 10
-#define TILESIZE 50
-#define MAPWIDTH TILESIZE * COLS
-#define	MAPHEIGHT TILESIZE * ROWS
 #define PI 3.1415926535
 #define P2 PI / 2
 #define P3 3 * PI / 2
 #define DR 0.0174533
-#define TO_COORD(X, Y) ((int)floor(Y) * MAPWIDTH + (int)floor(X))
+
+# define MAPX 8
+# define MAPY 8
+# define MAPS 64
+# define BLOCK 64
+
+# define WIDTH 1024
+# define TO_COORD(X, Y) ((int)floor(Y) * WIDTH + (int)floor(X))
 
 #include "mlx.h"
 #include <stdlib.h>
@@ -28,7 +30,7 @@
 #include "key_macos.h"
 #include "cub3d.h"
 #include <math.h>
-
+/*
 void	draw_line(t_game *game, double x1, double y1, double x2, double y2, int color)
 {
 	double	deltaX;
@@ -142,45 +144,250 @@ void	draw_player(t_game *game)
 	mlx_put_image_to_window(game->mlx, game->win, game->player.imgptr, game->player.px, game->player.py);
 }
 
+
+void	draw_rays(t_game *game)
+{
+	int			r, mx, my, mp, dof;
+	double		rx, ry, ra, xo, yo;
+
+	r = 0;
+	while (r < 1)
+	{
+		double aTan = -1 / tan(ra);
+		if (ra > PI)	// looking up
+		{
+			ry = (((int)game->player.py >> 6) << 6) - 0.0001;
+			rx = (game->player.py - ry) * aTan + game->player.px;
+			yo = -64;
+			xo = -yo * aTan;
+		}
+		if (ra < PI)	// looking down
+		{
+			ry = (((int)game->player.py >> 6) << 6) + 64;
+			rx = (game->player.py - ry) * aTan + game->player.px;
+			yo = 64;
+			xo = -yo * aTan;
+		}
+		if (ra == 0 || ra == PI)	// looking straight left or right
+		{
+			rx = game->player.px;
+			ry = game->player.py;
+			dof = 8;
+		}
+		while (dof < 8)
+		{
+			mx = (int)(rx) >> 6;
+			my = (int)(ry) >> 6;
+			mp = my * COLS + mx;
+			if (mp > 0 && mp < COLS * ROWS && game->map[my][mx] > 0) // hit wall
+			{
+				// hx = rx;
+				// hy = ry;
+				// disH = dist(game->player.px, window->player.py, hx, hy, ra);
+				dof = 8;
+			}
+			else	// next line
+			{
+				rx += xo;
+				ry += yo;
+				dof += 1;
+			}
+		}
+		draw_line(game, (int)game->player.px, (int)game->player.py, (int)rx, (int)ry, 0x00FF00);
+	}
+}
+
+int		main_loop(t_game *game)
+{
+	draw_rectangles(game);
+	draw_rays(game);
+	mlx_put_image_to_window(game->mlx, game->win, game->tile.imgptr, 0, 0);
+	draw_player(game);
+	return (0);
+}*/
+
+void	img_clear(t_game *game)
+{
+	int		i;
+	int		j;
+	i = 0;
+	while (i < game->height)
+	{
+		j = 0;
+		while (j < game->width)
+		{
+			game->map.data[i * game->width + j] = 0x000000;
+			j++;
+		}
+		i++;
+	}
+}
+
+void	window_init(t_game *game)
+{
+	game->width = 1024;
+	game->height = 512;
+	game->mlx = mlx_init();
+	game->win = mlx_new_window(game->mlx, game->width, game->height, "cub3d");
+}
+
+void	map_init(t_game *game)
+{
+	int	map[MAPY][MAPX] =
+	{
+		{1, 1, 1, 1, 1, 1, 1, 1},
+		{1, 0, 1, 0, 0, 0, 0, 1},
+		{1, 0, 1, 0, 0, 0, 0, 1},
+		{1, 0, 1, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 1, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 1},
+		{1, 1, 1, 1, 1, 1, 1, 1}
+	};
+
+	memcpy(game->map.map, map, sizeof(int) * MAPX * MAPY);
+	game->map.grid_color = 0xb3b3b3;
+	game->map.wall_color = 0xFFFFFF;
+	game->map.imgptr = mlx_new_image(game->mlx, game->width, game->height);
+	game->map.data = (int *)mlx_get_data_addr(game->map.imgptr, &game->map.bpp, &game->map.size_l, &game->map.endian);
+}
+
 void	init_player(t_game *game)
 {
-	game->player.px = (COLS / 2) * TILESIZE;
-	game->player.py = (ROWS / 2) * TILESIZE;
+	int			count_w;
+	int			count_h;
+	
+	
+	game->player.px = (double)game->width / 2;
+	game->player.py = (double)game->height / 2;
 	game->player.pa = P3;
 	game->player.pdx = cos(game->player.pa) * 5;
 	game->player.pdy = sin(game->player.pa) * 5;
 	game->player.color = 0xFF0000;
 	game->player.width = 5;
 	game->player.height = 5;
-	game->player.imgptr = mlx_new_image(game->mlx, game->player.width, game->player.height);
-	game->player.data = (int *)mlx_get_data_addr(game->player.imgptr, &game->player.bpp, &game->player.size_l, &game->player.endian);
-	draw_player(game);
+	
+	count_h = (int)game->player.py - 2;
+	while (count_h <= (int)game->player.py + 2)
+	{
+		count_w = (int)game->player.px - 2;
+		while (count_w <= (int)game->player.px + 2)
+		{
+			game->map.data[count_h * game->width + count_w] = 0xFF0000;
+			count_w++;
+		}
+		count_h++;
+	}
 }
 
-void	map_init(t_game *game)
+void			player_turn_left(t_game *game)
 {
-	int map[ROWS][COLS] = {
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 0, 1, 0, 0, 0, 0, 1, 0, 1},
-	{1, 0, 1, 0, 0, 0, 0, 1, 0, 1},
-	{1, 0, 1, 0, 0, 0, 0, 1, 0, 1},
-	{1, 0, 0, 0, 0, 0, 1, 1, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 1, 1, 1, 0, 0, 1},
-	{1, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-	};
-	memcpy(game->map, map, sizeof(int) * ROWS * COLS);
-	game->tile.grid_color = 0xb3b3b3;
-	game->tile.imgptr = mlx_new_image(game->mlx, MAPWIDTH, MAPHEIGHT);
-	game->tile.data = (int *)mlx_get_data_addr(game->tile.imgptr, &game->tile.bpp, &game->tile.size_l, &game->tile.endian);
+	game->player.pa -= 0.1;
+	if (game->player.pa < 0)
+		game->player.pa += 2 * PI;
+	game->player.pdx = cos(game->player.pa) * 5;
+	game->player.pdy = sin(game->player.pa) * 5;
 }
 
-void	window_init(t_game *game)
+void			player_turn_right(t_game *game)
 {
-	game->mlx = mlx_init();
-	game->win = mlx_new_window(game->mlx, MAPWIDTH, MAPHEIGHT, "cub3d");
+	game->player.pa += 0.1;
+	if (game->player.pa > 2 * PI)
+		game->player.pa -= 2 * PI;
+	game->player.pdx = cos(game->player.pa) * 5;
+	game->player.pdy = sin(game->player.pa) * 5;
+}
+
+void			player_move_down(t_game *game)
+{
+	int			old_x;
+	int			old_y;
+	int			count_w;
+	int			count_h;
+	int			px;
+	int			py;
+	int			flag;
+	
+	px = (int)game->player.px;
+	py = (int)game->player.py;
+	old_x = (int)game->player.px;
+	old_y = (int)game->player.py;
+	if ((0 < old_x - 2 && old_x + 2 < game->width / 2) && (0 < old_y - 2 && old_y + 2 < game->height))
+	{
+		count_h = old_y - 2;
+		while (count_h <= old_y + 2)
+		{
+			count_w = old_x - 2;
+			while (count_w <= old_x + 2)
+			{
+				game->map.data[count_h * game->width + count_w] = 0x000000;
+				count_w++;
+			}
+			count_h++;
+		}
+		if (game->map.map[(int)(old_y - game->player.pdy) / BLOCK][(int)(old_x - game->player.pdx) / BLOCK] == 0)
+		{
+			game->player.px -= (int)game->player.pdx;
+			game->player.py -= (int)game->player.pdy;
+		}
+		count_h = (int)game->player.py - 2;
+		while (count_h <= (int)game->player.py + 2)
+		{
+			count_w = (int)game->player.px - 2;
+			while (count_w <= (int)game->player.px + 2)
+			{
+				game->map.data[count_h * game->width + count_w] = 0xFF0000;
+				count_w++;
+			}
+			count_h++;
+		}
+	}
+}
+
+void			player_move_up(t_game *game)
+{
+	int			old_x;
+	int			old_y;
+	int			count_w;
+	int			count_h;
+	int			px;
+	int			py;
+	int			flag;
+	
+	px = (int)game->player.px;
+	py = (int)game->player.py;
+	old_x = (int)game->player.px;
+	old_y = (int)game->player.py;
+	if ((0 < old_x - 2 && old_x + 2 < game->width / 2) && (0 < old_y - 2 && old_y + 2 < game->height))
+	{
+		count_h = old_y - 2;
+		while (count_h <= old_y + 2)
+		{
+			count_w = old_x - 2;
+			while (count_w <= old_x + 2)
+			{
+				game->map.data[count_h * game->width + count_w] = 0x000000;
+				count_w++;
+			}
+			count_h++;
+		}
+		if (game->map.map[(int)(old_y + game->player.pdy) / BLOCK][(int)(old_x + game->player.pdx) / BLOCK] == 0)
+		{
+			game->player.px += (int)game->player.pdx;
+			game->player.py += (int)game->player.pdy;
+		}
+		count_h = (int)game->player.py - 2;
+		while (count_h <= (int)game->player.py + 2)
+		{
+			count_w = (int)game->player.px - 2;
+			while (count_w <= (int)game->player.px + 2)
+			{
+				game->map.data[count_h * game->width + count_w] = 0xFF0000;
+				count_w++;
+			}
+			count_h++;
+		}
+	}
 }
 
 int		key_input(int key, t_game *game)
@@ -197,13 +404,11 @@ int		key_input(int key, t_game *game)
 	}
 	if (key == KEY_W)
 	{
-		game->player.px += (int)game->player.pdx;
-		game->player.py += (int)game->player.pdy;
+		player_move_up(game);
 	}
 	if (key == KEY_S)
 	{
-		game->player.px -= (int)game->player.pdx;
-		game->player.py -= (int)game->player.pdy;
+		player_move_down(game);
 	}
 	if (key == KEY_AR_L)
 	{
@@ -223,14 +428,7 @@ int		key_input(int key, t_game *game)
 	}
 	if (key == KEY_ESC) 
 		exit(0);
-	return (0);
-}
-
-int		main_loop(t_game *game)
-{
-	draw_rectangles(game);
-	mlx_put_image_to_window(game->mlx, game->win, game->tile.imgptr, 0, 0);
-	draw_player(game);
+	mlx_put_image_to_window(game->mlx, game->win, game->map.imgptr, 0, 0);
 	return (0);
 }
 
@@ -240,8 +438,10 @@ int main(void)
 	
 	window_init(&game);
 	map_init(&game);
+	img_clear(&game);
 	init_player(&game);
+	mlx_put_image_to_window(game.mlx, game.win, game.map.imgptr, 0, 0);
 	mlx_hook(game.win, X_EVENT_KEY_PRESS, 0, key_input, &game);
-	mlx_loop_hook(game.mlx, main_loop, &game);
+	//mlx_loop_hook(game.mlx, main_loop, &game);
 	mlx_loop(game.mlx);
 }

@@ -1,14 +1,15 @@
-typedef struct	s_tile
+typedef struct	s_map
 {
+	int		map[MAPX][MAPY];
 	int		grid_color;
-	
+	int		wall_color;
+
 	void	*imgptr;
 	int		*data;
-
 	int		size_l;
 	int		bpp;
 	int		endian;
-}				t_tile;
+}				t_map;
 
 typedef struct  s_player
 {
@@ -21,20 +22,15 @@ typedef struct  s_player
 	int			width;
 	int			height;
 	int			color;
-
-	void		*imgptr;
-	int			*data;
-	int			size_l;
-	int			bpp;
-	int			endian;
 }				t_player;
 
 typedef struct	s_game
 {
 	void		*mlx;
 	void		*win;
-	t_tile		tile;
-	t_player	player;
+	int			width;
+	int			height;
 
-	int			map[ROWS][COLS];
+	t_player	player;
+	t_map		map;
 }				t_game;
