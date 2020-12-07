@@ -1,8 +1,6 @@
 typedef struct	s_map
 {
 	int		map[MAPX][MAPY];
-	int		grid_color;
-	int		wall_color;
 
 	void	*imgptr;
 	int		*data;
@@ -28,9 +26,15 @@ typedef struct	s_game
 {
 	void		*mlx;
 	void		*win;
-	int			width;
-	int			height;
-
+	
 	t_player	player;
 	t_map		map;
+
+	int			width;
+	int			height;
+	int			map_color;
+	int			grid_color;
+	int			wall_color;
+	int			row_count;
+	int			column_count;
 }				t_game;
