@@ -82,6 +82,7 @@
 */
 
 # define X_EVENT_KEY_PRESS 2
+# define X_EVENT_KEY_RELEASED 3
 # define X_EVENT_KEY_EXIT 17 //Exit program key code
 
 #endif
