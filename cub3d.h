@@ -39,85 +39,11 @@
 // 	int vertical;
 // }				t_point_of_view;
 
-typedef struct	s_player
-{
-	double posX;
-	double posY;
-	double dirX;
-	double dirY;
-	double planeX;
-	double planeY;
-	// t_point_of_view	movement;
-	// t_point_of_view	rotation;
 
-}				t_player;
 
-typedef struct	s_window
-{
-	int width;
-	int height;
-	int **scene;
-}				t_window;
 
-typedef struct	s_texture
-{
-	int			width;
-	int			height;
-	int			*data;
-}				t_texture;
 
-typedef struct	s_rgb
-{
-	int r;
-	int g;
-	int b;
-}				t_rgb;
 
-typedef struct	s_map
-{
-	int			width;
-	int			height;
-	char		**data;
-}				t_map;
-
-typedef struct	s_control
-{
-	int			keyboard[101];
-	// t_pair_int	old_mouse_point;
-	// t_pair_int	new_mouse_point;
-}				t_control;
-
-// typedef struct	s_cub
-// {
-// 	void	*mlx;
-// 	void	*win;
-// 	t_img	img;
-// 	int		buf[1][1];
-// 	double	moveSpeed;
-// 	double	rotSpeed;
-
-// 	t_window	window;
-// 	t_player	player;
-// 	t_texture	texture[5];
-// 	t_rgb		floor;
-// 	t_rgb		ceil;
-// 	// t_list		*sprite;
-// 	t_map		map;
-// 	t_control	control;
-// 	double		*zbuf;
-// }				t_cub;
-
-typedef struct	s_str_arr {
-	int		size;
-	char	**elem;
-}				t_str_arr;
-
-#define texWidth 64
-#define texHeight 64
-#define mapWidth 6
-#define mapHeight 6
-#define width 640
-#define height 480
 
 typedef struct	s_img
 {
@@ -191,24 +117,103 @@ typedef struct	s_temp
 
 typedef struct	s_info
 {
+	t_img	img;
+	int		**texture;
+}				t_info;
+
+typedef struct	s_player
+{
 	double posX;
 	double posY;
 	double dirX;
 	double dirY;
 	double planeX;
 	double planeY;
+	double	moveSpeed;
+	double	rotSpeed;
+	// t_point_of_view	movement;
+	// t_point_of_view	rotation;
+
+}				t_player;
+
+typedef struct	s_window
+{
+	int width;
+	int height;
+	int		**buf;
+}				t_window;
+
+typedef struct	s_texture
+{
+	int			width;
+	int			height;
+	int			*data;
+}				t_texture;
+
+typedef struct	s_rgb
+{
+	int r;
+	int g;
+	int b;
+}				t_rgb;
+
+typedef struct	s_map
+{
+	int			width;
+	int			height;
+	char		**data;
+}				t_map;
+
+typedef struct	s_control
+{
+	int			keyboard[101];
+	// t_pair_int	old_mouse_point;
+	// t_pair_int	new_mouse_point;
+}				t_control;
+
+
+
+typedef struct	s_str_arr {
+	int		size;
+	char	**elem;
+}				t_str_arr;
+
+typedef struct	s_cub
+{
 	void	*mlx;
 	void	*win;
 	t_img	img;
+	t_window	window;
+	t_player	player;
+	t_texture	texture[5];
+	t_rgb		floor;
+	t_rgb		ceil;
+	// t_list		*sprite;
+	t_map		map;
+	t_control	control;
 	t_temp	temp;
-	int		buf[height][width];
-	int		**texture;
-	double	moveSpeed;
-	double	rotSpeed;
-}				t_info;
+	double		*zbuf;
+}				t_cub;
 
-// extern t_cub g_cub;
+extern t_cub g_cub;
 
-int		map_parser(char *map, t_str_arr *str_arr);
-int		is_included(char c, char *set);
-void	free_2d_arr(char **arr, int size);
+int			map_parser(char *map, t_str_arr *str_arr);
+int			is_included(char c, char *set);
+void		free_2d_arr(char **arr, int size);
+void		ft_list_strjoin(t_str_arr *str_arr, char *str);
+int			key_press(int key, t_info *info);
+int			main_loop(t_info *info);
+void		calc(t_info *info);
+void		draw(t_info *info);
+int			set_cub(t_cub *cub, t_str_arr *conf);
+char		**init_chars_array(int row, int col, char c);
+char		**init_map(char **strs, int start, t_map *map);
+void		calc_size(t_str_arr *arr, int i, t_map *map);
+t_window	init_window(int width, int height);
+t_rgb		init_rgb(char *s);
+int			load_texture(t_texture *texture, char *file_path);
+int			parse_key_texture(t_cub *cub, char *key, char *file_path);
+int			parse_key(t_cub *cub, char *s);
+void		set_player(t_player *player, int x, int y, char dir);
+t_player	init_player(t_map *map);
+
