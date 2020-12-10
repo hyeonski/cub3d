@@ -19,12 +19,13 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <limits.h>
+# include "../libft/libft.h"
 
-int		ft_strlen(const char *s);
-char	*ft_strchr(char *str, int c);
-char	*ft_strjoin(char *s1, char *s2);
-char	*ft_substr(char *str, unsigned int start, int len);
-char	*ft_strdup(char *str);
+// int		ft_strlen(const char *s);
+// char	*ft_strchr(char *str, int c);
+// char	*ft_strjoin(char *s1, char *s2);
+// char	*ft_substr(char *str, unsigned int start, int len);
+// char	*ft_strdup(char *str);
 int		get_next_line(int fd, char **line);
 
 #endif

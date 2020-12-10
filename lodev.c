@@ -5,80 +5,22 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/06/29 19:53:20 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/09 18:20:51 by hyeonski         ###   ########.fr       */
+/*   Created: 2020/06/29 19:53:20 by yohlee            #+#    #+#             */
+/*   Updated: 2020/12/10 13:21:27 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mlx.h>
-#include "key_macos.h"
-#include <math.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#define texWidth 64
-#define texHeight 64
-#define mapWidth 24
-#define mapHeight 24
-#define width 700
-#define height 480
-
-typedef struct	s_img
-{
-	void	*img;
-	int		*data;
-
-	int		size_l;
-	int		bpp;
-	int		endian;
-	int		img_width;
-	int		img_height;
-}				t_img;
-
-typedef struct	s_info
-{
-	double posX;
-	double posY;
-	double dirX;
-	double dirY;
-	double planeX;
-	double planeY;
-	void	*mlx;
-	void	*win;
-	t_img	img;
-	int		buf[height][width];
-	int		**texture;
-	double	moveSpeed;
-	double	rotSpeed;
-}				t_info;
+#include "cub3d.h"
 
 int	worldMap[mapWidth][mapHeight] =
-									{
-										{8,8,8,8,8,8,8,8,8,8,8,4,4,6,4,4,6,4,6,4,4,4,6,4},
-										{8,0,0,0,0,0,0,0,0,0,8,4,0,0,0,0,0,0,0,0,0,0,0,4},
-										{8,0,3,3,0,0,0,0,0,8,8,4,0,0,0,0,0,0,0,0,0,0,0,6},
-										{8,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
-										{8,0,3,3,0,0,0,0,0,8,8,4,0,0,0,0,0,0,0,0,0,0,0,4},
-										{8,0,0,0,0,0,0,0,0,0,8,4,0,0,0,0,0,6,6,6,0,6,4,6},
-										{8,8,8,8,0,8,8,8,8,8,8,4,4,4,4,4,4,6,0,0,0,0,0,6},
-										{7,7,7,7,0,7,7,7,7,0,8,0,8,0,8,0,8,4,0,4,0,6,0,6},
-										{7,7,0,0,0,0,0,0,7,8,0,8,0,8,0,8,8,6,0,0,0,0,0,6},
-										{7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,6,0,0,0,0,0,4},
-										{7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,6,0,6,0,6,0,6},
-										{7,7,0,0,0,0,0,0,7,8,0,8,0,8,0,8,8,6,4,6,0,6,6,6},
-										{7,7,7,7,0,7,7,7,7,8,8,4,0,6,8,4,8,3,3,3,0,3,3,3},
-										{2,2,2,2,0,2,2,2,2,4,6,4,0,0,6,0,6,3,0,0,0,0,0,3},
-										{2,2,0,0,0,0,0,2,2,4,0,0,0,0,0,0,4,3,0,0,0,0,0,3},
-										{2,0,0,0,0,0,0,0,2,4,0,0,0,0,0,0,4,3,0,0,0,0,0,3},
-										{1,0,0,0,0,0,0,0,1,4,4,4,4,4,6,0,6,3,3,0,0,0,3,3},
-										{2,0,0,0,0,0,0,0,2,2,2,1,2,2,2,6,6,0,0,5,0,5,0,5},
-										{2,2,0,0,0,0,0,2,2,2,0,0,0,2,2,0,5,0,5,0,0,0,5,5},
-										{2,0,0,0,0,0,0,0,2,0,0,0,0,0,2,5,0,5,0,5,0,5,0,5},
-										{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5},
-										{2,0,0,0,0,0,0,0,2,0,0,0,0,0,2,5,0,5,0,5,0,5,0,5},
-										{2,2,0,0,0,0,0,2,2,2,0,0,0,2,2,0,5,0,5,0,0,0,5,5},
-										{2,2,2,2,1,2,2,2,2,2,2,1,2,2,2,5,5,5,5,5,5,5,5,5}
-									};
+{
+	{1,1,1,1,1,1},
+	{1,0,0,0,0,1},
+	{1,0,1,0,0,1},
+	{1,0,0,0,0,1},
+	{1,0,0,0,0,1},
+	{1,1,1,1,1,1}
+};
 
 void	draw(t_info *info)
 {
@@ -98,238 +40,228 @@ void	calc(t_info *info)
 	for(int y = 0; y < height; y++)
 	{
 		// rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
-		float rayDirX0 = info->dirX - info->planeX;
-		float rayDirY0 = info->dirY - info->planeY;
-		float rayDirX1 = info->dirX + info->planeX;
-		float rayDirY1 = info->dirY + info->planeY;
+		info->temp.rayDirX0 = info->dirX - info->planeX;
+		info->temp.rayDirY0 = info->dirY - info->planeY;
+		info->temp.rayDirX1 = info->dirX + info->planeX;
+		info->temp.rayDirY1 = info->dirY + info->planeY;
 
 		// Current y position compared to the center of the screen (the horizon)
-		int p = y - height / 2;
+		info->temp.p = y - height / 2;
 
 		// Vertical position of the camera.
-		float posZ = 0.5 * height;
+		info->temp.posZ = 0.5 * height;
 
 		// Horizontal distance from the camera to the floor for the current row.
 		// 0.5 is the z position exactly in the middle between floor and ceiling.
-		float rowDistance = posZ / p;
+		float rowDistance = info->temp.posZ / info->temp.p;
 
 		// calculate the real world step vector we have to add for each x (parallel to camera plane)
 		// adding step by step avoids multiplications with a weight in the inner loop
-		float floorStepX = rowDistance * (rayDirX1 - rayDirX0) / width;
-		float floorStepY = rowDistance * (rayDirY1 - rayDirY0) / width;
+		float floorStepX = rowDistance * (info->temp.rayDirX1 - info->temp.rayDirX0) / width;
+		float floorStepY = rowDistance * (info->temp.rayDirY1 - info->temp.rayDirY0) / width;
 
 		// real world coordinates of the leftmost column. This will be updated as we step to the right.
-		float floorX = info->posX + rowDistance * rayDirX0;
-		float floorY = info->posY + rowDistance * rayDirY0;
+		float floorX = info->posX + rowDistance * info->temp.rayDirX0;
+		float floorY = info->posY + rowDistance * info->temp.rayDirY0;
 
 		for(int x = 0; x < width; ++x)
 		{
 			// the cell coord is simply got from the integer parts of floorX and floorY
-			int cellX = (int)(floorX);
-			int cellY = (int)(floorY);
+			info->temp. cellX = (int)(floorX);
+			info->temp. cellY = (int)(floorY);
 
 			// get the texture coordinate from the fractional part
-			int tx = (int)(texWidth * (floorX - cellX)) & (texWidth - 1);
-			int ty = (int)(texHeight * (floorY - cellY)) & (texHeight - 1);
+			info->temp. tx = (int)(texWidth * (floorX - info->temp.cellX)) & (texWidth - 1);
+			info->temp.ty = (int)(texHeight * (floorY - info->temp.cellY)) & (texHeight - 1);
 
 			floorX += floorStepX;
 			floorY += floorStepY;
 
 			// choose texture and draw the pixel
-			int floorTexture = 3;
-			int ceilingTexture = 6;
-
-			int color;
+			info->temp.floorTexture = 3;
+			info->temp.ceilingTexture = 6;
 
 			// floor
-			color = info->texture[floorTexture][texWidth * ty + tx];
-			color = (color >> 1) & 8355711; // make a bit darker
+			info->temp.color = info->texture[info->temp.floorTexture][texWidth * info->temp.ty + info->temp.tx];
+			info->temp.color = (info->temp.color >> 1) & 8355711; // make a bit darker
 
-			info->buf[y][x] = color;
+			info->buf[y][x] = info->temp.color;
 
 			//ceiling (symmetrical, at screenHeight - y - 1 instead of y)
-			color = info->texture[ceilingTexture][texWidth * ty + tx];
-			color = (color >> 1) & 8355711; // make a bit darker
+			info->temp.color = info->texture[info->temp.ceilingTexture][texWidth * info->temp.ty + info->temp.tx];
+			info->temp.color = (info->temp.color >> 1) & 8355711; // make a bit darker
 
-			info->buf[height - y - 1][x] = color;
+			info->buf[height - y - 1][x] = info->temp.color;
 		}
 	}
 	//WALL CASTING
 	for(int x = 0; x < width; x++)
 	{
-		double cameraX = 2 * x / (double)width - 1;
-		double rayDirX = info->dirX + info->planeX * cameraX;
-		double rayDirY = info->dirY + info->planeY * cameraX;
+		info->temp.cameraX = 2 * x / (double)width - 1;
+		info->temp.rayDirX = info->dirX + info->planeX * info->temp.cameraX;
+		info->temp.rayDirY = info->dirY + info->planeY * info->temp.cameraX;
 		
-		int mapX = (int)info->posX;
-		int mapY = (int)info->posY;
+		info->temp.mapX = (int)info->posX;
+		info->temp.mapY = (int)info->posY;
 
 		//length of ray from current position to next x or y-side
-		double sideDistX;
-		double sideDistY;
 		
-		 //length of ray from one x or y-side to next x or y-side
-		double deltaDistX = fabs(1 / rayDirX);
-		double deltaDistY = fabs(1 / rayDirY);
-		double perpWallDist;
+		//length of ray from one x or y-side to next x or y-side
+		info->temp.deltaDistX = fabs(1 / info->temp.rayDirX);
+		info->temp.deltaDistY = fabs(1 / info->temp.rayDirY);
 		
 		//what direction to step in x or y-direction (either +1 or -1)
-		int stepX;
-		int stepY;
 		
-		int hit = 0; //was there a wall hit?
-		int side; //was a NS or a EW wall hit?
+		info->temp.hit = 0; //was there a wall hit?
 
-		if (rayDirX < 0)
+		if (info->temp.rayDirX < 0)
 		{
-			stepX = -1;
-			sideDistX = (info->posX - mapX) * deltaDistX;
+			info->temp.stepX = -1;
+			info->temp.sideDistX = (info->posX - info->temp.mapX) * info->temp.deltaDistX;
 		}
 		else
 		{
-			stepX = 1;
-			sideDistX = (mapX + 1.0 - info->posX) * deltaDistX;
+			info->temp.stepX = 1;
+			info->temp.sideDistX = (info->temp.mapX + 1.0 - info->posX) * info->temp.deltaDistX;
 		}
-		if (rayDirY < 0)
+		if (info->temp.rayDirY < 0)
 		{
-			stepY = -1;
-			sideDistY = (info->posY - mapY) * deltaDistY;
+			info->temp.stepY = -1;
+			info->temp.sideDistY = (info->posY - info->temp.mapY) * info->temp.deltaDistY;
 		}
 		else
 		{
-			stepY = 1;
-			sideDistY = (mapY + 1.0 - info->posY) * deltaDistY;
+			info->temp.stepY = 1;
+			info->temp.sideDistY = (info->temp.mapY + 1.0 - info->posY) * info->temp.deltaDistY;
 		}
 
-		while (hit == 0)
+		while (info->temp.hit == 0)
 		{
 			//jump to next map square, OR in x-direction, OR in y-direction
-			if (sideDistX < sideDistY)
+			if (info->temp.sideDistX < info->temp.sideDistY)
 			{
-				sideDistX += deltaDistX;
-				mapX += stepX;
-				side = 0;
+				info->temp.sideDistX += info->temp.deltaDistX;
+				info->temp.mapX += info->temp.stepX;
+				info->temp.side = 0;
 			}
 			else
 			{
-				sideDistY += deltaDistY;
-				mapY += stepY;
-				side = 1;
+				info->temp.sideDistY += info->temp.deltaDistY;
+				info->temp.mapY += info->temp.stepY;
+				info->temp.side = 1;
 			}
 			//Check if ray has hit a wall
-			if (worldMap[mapX][mapY] > 0) hit = 1;
+			if (worldMap[info->temp.mapX][info->temp.mapY] > 0)
+				info->temp.hit = 1;
 		}
-		if (side == 0)
-			perpWallDist = (mapX - info->posX + (1 - stepX) / 2) / rayDirX;
+		if (info->temp.side == 0)
+			info->temp.perpWallDist = (info->temp.mapX - info->posX + (1 - info->temp.stepX) / 2) / info->temp.rayDirX;
 		else
-			perpWallDist = (mapY - info->posY + (1 - stepY) / 2) / rayDirY;
+			info->temp.perpWallDist = (info->temp.mapY - info->posY + (1 - info->temp.stepY) / 2) / info->temp.rayDirY;
 
 		//Calculate height of line to draw on screen
-		int lineHeight = (int)(height / perpWallDist);
+		info->temp.lineHeight = (int)(height / info->temp.perpWallDist);
 
 		//calculate lowest and highest pixel to fill in current stripe
-		int drawStart = -lineHeight / 2 + height / 2;
-		if(drawStart < 0)
-			drawStart = 0;
-		int drawEnd = lineHeight / 2 + height / 2;
-		if(drawEnd >= height)
-			drawEnd = height - 1;
+		info->temp.drawStart = -info->temp.lineHeight / 2 + height / 2;
+		if (info->temp.drawStart < 0)
+			info->temp.drawStart = 0;
+		info->temp.drawEnd = info->temp.lineHeight / 2 + height / 2;
+		if (info->temp.drawEnd >= height)
+			info->temp.drawEnd = height - 1;
 
 		// texturing calculations
-		int texNum = worldMap[mapX][mapY] - 1;
+		info->temp.texNum = worldMap[info->temp.mapX][info->temp.mapY] - 1;
 
 		// calculate value of wallX
-		double wallX;
-		if (side == 0)
-			wallX = info->posY + perpWallDist * rayDirY;
+		if (info->temp.side == 0)
+			info->temp.wallX = info->posY + info->temp.perpWallDist * info->temp.rayDirY;
 		else
-			wallX = info->posX + perpWallDist * rayDirX;
-		wallX -= floor(wallX);
+			info->temp.wallX = info->posX + info->temp.perpWallDist * info->temp.rayDirX;
+		info->temp.wallX -= floor(info->temp.wallX);
 
 		// x coordinate on the texture
-		int texX = (int)(wallX * (double)texWidth);
-		if (side == 0 && rayDirX > 0)
-			texX = texWidth - texX - 1;
-		if (side == 1 && rayDirY < 0)
-			texX = texWidth - texX - 1;
+		info->temp.texX = (int)(info->temp.wallX * (double)texWidth);
+		if (info->temp.side == 0 && info->temp.rayDirX > 0)
+			info->temp.texX = texWidth - info->temp.texX - 1;
+		if (info->temp.side == 1 && info->temp.rayDirY < 0)
+			info->temp.texX = texWidth - info->temp.texX - 1;
 
 		// How much to increase the texture coordinate perscreen pixel
-		double step = 1.0 * texHeight / lineHeight;
+		info->temp.step = 1.0 * texHeight / info->temp.lineHeight;
 
 		// Starting texture coordinate
-		double texPos = (drawStart - height / 2 + lineHeight / 2) * step;
+		info->temp.texPos = (info->temp.drawStart - height / 2 + info->temp.lineHeight / 2) * info->temp.step;
 
-		for (int y = drawStart; y < drawEnd; y++)
+		for (int y = info->temp.drawStart; y < info->temp.drawEnd; y++)
 		{
 			// Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
-			int texY = (int)texPos & (texHeight - 1);
-			texPos += step;
-			
-			// printf("textNum : %d \ntexHeight * texY + texX: %d", texNum, texHeight * texY + texX);
-			int color = info->texture[texNum][texHeight * texY + texX];
+			info->temp.texY = (int)info->temp.texPos & (texHeight - 1);
+			info->temp.texPos += info->temp.step;
+
+			info->temp.color = info->texture[info->temp.texNum][texHeight * info->temp.texY + info->temp.texX];
 
 			// make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
-			if (side == 1)
-				color = (color >> 1) & 8355711;
+			if (info->temp.side == 1)
+				info->temp.color = (info->temp.color >> 1) & 8355711;
 
-			info->buf[y][x] = color;
+			info->buf[y][x] = info->temp.color;
 		}
 
 		//FLOOR CASTING (vertical version, directly after drawing the vertical wall stripe for the current x)
-		double floorXWall, floorYWall; //x, y position of the floor texel at the bottom of the wall
 
 		//4 different wall directions possible
-		if(side == 0 && rayDirX > 0)
+		if (info->temp.side == 0 && info->temp.rayDirX > 0)
 		{
-			floorXWall = mapX;
-			floorYWall = mapY + wallX;
+			info->temp.floorXWall = info->temp.mapX;
+			info->temp.floorYWall = info->temp.mapY + info->temp.wallX;
 		}
-		else if(side == 0 && rayDirX < 0)
+		else if(info->temp.side == 0 && info->temp.rayDirX < 0)
 		{
-			floorXWall = mapX + 1.0;
-			floorYWall = mapY + wallX;
+			info->temp.floorXWall = info->temp.mapX + 1.0;
+			info->temp.floorYWall = info->temp.mapY + info->temp.wallX;
 		}
-		else if(side == 1 && rayDirY > 0)
+		else if(info->temp.side == 1 && info->temp.rayDirY > 0)
 		{
-			floorXWall = mapX + wallX;
-			floorYWall = mapY;
+			info->temp.floorXWall =info->temp. mapX + info->temp.wallX;
+			info->temp.floorYWall =info->temp. mapY;
 		}
 		else
 		{
-			floorXWall = mapX + wallX;
-			floorYWall = mapY + 1.0;
+			info->temp.floorXWall =info->temp. mapX + info->temp.wallX;
+			info->temp.floorYWall = info->temp.mapY + 1.0;
 		}
 
-		double distWall, distPlayer, currentDist;
 
-		distWall = perpWallDist;
-		distPlayer = 0.0;
+		info->temp.distWall = info->temp.perpWallDist;
+		info->temp.distPlayer = 0.0;
 
-		if (drawEnd < 0) drawEnd = height; //becomes < 0 when the integer overflows
+		if (info->temp.drawEnd < 0)
+			info->temp.drawEnd = height; //becomes < 0 when the integer overflows
 
 		//draw the floor from drawEnd to the bottom of the screen
-		for(int y = drawEnd + 1; y < height; y++)
+		for (int y = info->temp.drawEnd + 1; y < height; y++)
 		{
-			currentDist = height / (2.0 * y - height); //you could make a small lookup table for this instead
+			info->temp.currentDist = height / (2.0 * y - height); //you could make a small lookup table for this instead
 
-			double weight = (currentDist - distPlayer) / (distWall - distPlayer);
+			info->temp.weight = (info->temp.currentDist - info->temp.distPlayer) / (info->temp.distWall - info->temp.distPlayer);
 
-			double currentFloorX = weight * floorXWall + (1.0 - weight) * info->posX;
-			double currentFloorY = weight * floorYWall + (1.0 - weight) * info->posY;
+			info->temp.currentFloorX = info->temp.weight * info->temp.floorXWall + (1.0 - info->temp.weight) * info->posX;
+			info->temp.currentFloorY = info->temp.weight * info->temp.floorYWall + (1.0 - info->temp.weight) * info->posY;
 
-			int floorTexX, floorTexY;
-			floorTexX = (int)(currentFloorX * texWidth) % texWidth;
-			floorTexY = (int)(currentFloorY * texHeight) % texHeight;
+			info->temp.floorTexX = (int)(info->temp.currentFloorX * texWidth) % texWidth;
+			info->temp.floorTexY = (int)(info->temp.currentFloorY * texHeight) % texHeight;
 
-			int checkerBoardPattern = ((int)(currentFloorX) + (int)(currentFloorY)) % 2;
-			int floorTexture;
-			if(checkerBoardPattern == 0) floorTexture = 3;
-			else floorTexture = 4;
+			info->temp.checkerBoardPattern = ((int)(info->temp.currentFloorX) + (int)(info->temp.currentFloorY)) % 2;
+			if	(info->temp.checkerBoardPattern == 0)
+				info->temp.floorTexture = 3;
+			else
+				info->temp.floorTexture = 4;
 
 			//floor
-			info->buf[y][x] = (info->texture[floorTexture][texWidth * floorTexY + floorTexX] >> 1) & 8355711;
+			info->buf[y][x] = (info->texture[info->temp.floorTexture][texWidth * info->temp.floorTexY + info->temp.floorTexX] >> 1) & 8355711;
 			//ceiling (symmetrical!)
-			info->buf[height - y][x] = info->texture[6][texWidth * floorTexY + floorTexX];
+			info->buf[height - y][x] = info->texture[6][texWidth * info->temp.floorTexY + info->temp.floorTexX];
 		}
 	}
 }
@@ -362,26 +294,27 @@ int	key_press(int key, t_info *info)
 	if (key == KEY_D)
 	{
 		//both camera direction and camera plane must be rotated
-		double oldDirX = info->dirX;
+		info->temp.oldDirX = info->dirX;
 		info->dirX = info->dirX * cos(-info->rotSpeed) - info->dirY * sin(-info->rotSpeed);
-		info->dirY = oldDirX * sin(-info->rotSpeed) + info->dirY * cos(-info->rotSpeed);
-		double oldPlaneX = info->planeX;
+		info->dirY = info->temp.oldDirX * sin(-info->rotSpeed) + info->dirY * cos(-info->rotSpeed);
+		info->temp.oldPlaneX = info->planeX;
 		info->planeX = info->planeX * cos(-info->rotSpeed) - info->planeY * sin(-info->rotSpeed);
-		info->planeY = oldPlaneX * sin(-info->rotSpeed) + info->planeY * cos(-info->rotSpeed);
+		info->planeY = info->temp.oldPlaneX * sin(-info->rotSpeed) + info->planeY * cos(-info->rotSpeed);
 	}
 	//rotate to the left
 	if (key == KEY_A)
 	{
 		//both camera direction and camera plane must be rotated
-		double oldDirX = info->dirX;
+		info->temp.oldDirX = info->dirX;
 		info->dirX = info->dirX * cos(info->rotSpeed) - info->dirY * sin(info->rotSpeed);
-		info->dirY = oldDirX * sin(info->rotSpeed) + info->dirY * cos(info->rotSpeed);
-		double oldPlaneX = info->planeX;
+		info->dirY = info->temp.oldDirX * sin(info->rotSpeed) + info->dirY * cos(info->rotSpeed);
+		info->temp.oldPlaneX = info->planeX;
 		info->planeX = info->planeX * cos(info->rotSpeed) - info->planeY * sin(info->rotSpeed);
-		info->planeY = oldPlaneX * sin(info->rotSpeed) + info->planeY * cos(info->rotSpeed);
+		info->planeY = info->temp.oldPlaneX * sin(info->rotSpeed) + info->planeY * cos(info->rotSpeed);
 	}
 	if (key == KEY_ESC)
 		exit(0);
+	printf("x: %f , y: %f\n", info->posX, info->posY);
 	return (0);
 }
 
@@ -414,17 +347,20 @@ void	load_texture(t_info *info)
 }
 
 
-int	main(void)
+int	main(int ac, char **av)
 {
-	t_info info;
-	info.mlx = mlx_init();
+	t_info		info;
+	t_str_arr	str_arr;
 
-	info.posX = 22.0;
-	info.posY = 11.5;
+	info.mlx = mlx_init();
+	info.posX = 1.1;
+	info.posY = 1.1;
 	info.dirX = -1.0;
 	info.dirY = 0.0;
 	info.planeX = 0.0;
 	info.planeY = 0.66;
+
+	// map_parser(av[1], &str_arr);
 
 	for (int i = 0; i < height; i++)
 	{
@@ -451,8 +387,8 @@ int	main(void)
 
 	load_texture(&info);
 
-	info.moveSpeed = 0.1;
-	info.rotSpeed = 0.1;
+	info.moveSpeed = 0.05;
+	info.rotSpeed = 0.05;
 	
 	info.win = mlx_new_window(info.mlx, width, height, "mlx");
 
