@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 16:34:02 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/10 17:35:23 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/13 00:08:20 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int		map_parser(char *map, t_str_arr *str_arr)
 		free(temp);
 	}
 	free(temp);
-	close(fd);
+	close(fd);x
 
 	// for (int i = 0; i < str_arr->size; i++)
 	// {

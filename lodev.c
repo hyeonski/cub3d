@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/29 19:53:20 by yohlee            #+#    #+#             */
-/*   Updated: 2020/12/10 17:31:33 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/12 23:24:32 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,58 +216,6 @@ void	calc(t_info *info)
 
 			g_cub.window.buf[y][x] = g_cub.temp.color;
 		}
-
-		//FLOOR CASTING (vertical version, directly after drawing the vertical wall stripe for the current x)
-
-		//4 different wall directions possible
-		if (g_cub.temp.side == 0 && g_cub.temp.rayDirX > 0)
-		{
-			g_cub.temp.floorXWall = g_cub.temp.mapX;
-			g_cub.temp.floorYWall = g_cub.temp.mapY + g_cub.temp.wallX;
-		}
-		else if(g_cub.temp.side == 0 && g_cub.temp.rayDirX < 0)
-		{
-			g_cub.temp.floorXWall = g_cub.temp.mapX + 1.0;
-			g_cub.temp.floorYWall = g_cub.temp.mapY + g_cub.temp.wallX;
-		}
-		else if(g_cub.temp.side == 1 && g_cub.temp.rayDirY > 0)
-		{
-			g_cub.temp.floorXWall =g_cub.temp. mapX + g_cub.temp.wallX;
-			g_cub.temp.floorYWall =g_cub.temp. mapY;
-		}
-		else
-		{
-			g_cub.temp.floorXWall =g_cub.temp. mapX + g_cub.temp.wallX;
-			g_cub.temp.floorYWall = g_cub.temp.mapY + 1.0;
-		}
-
-
-		g_cub.temp.distWall = g_cub.temp.perpWallDist;
-		g_cub.temp.distPlayer = 0.0;
-
-		if (g_cub.temp.drawEnd < 0)
-			g_cub.temp.drawEnd = g_cub.window.height; //becomes < 0 when the integer overflows
-
-		//draw the floor from drawEnd to the bottom of the screen
-		for (int y = g_cub.temp.drawEnd + 1; y < g_cub.window.height; y++)
-		{
-			g_cub.temp.currentDist = g_cub.window.height / (2.0 * y - g_cub.window.height); //you could make a small lookup table for this instead
-
-			g_cub.temp.weight = (g_cub.temp.currentDist - g_cub.temp.distPlayer) / (g_cub.temp.distWall - g_cub.temp.distPlayer);
-
-			g_cub.temp.currentFloorX = g_cub.temp.weight * g_cub.temp.floorXWall + (1.0 - g_cub.temp.weight) * g_cub.player.posX;
-			g_cub.temp.currentFloorY = g_cub.temp.weight * g_cub.temp.floorYWall + (1.0 - g_cub.temp.weight) * g_cub.player.posY;
-
-			g_cub.temp.floorTexX = (int)(g_cub.temp.currentFloorX * g_cub.texture[0].width) % g_cub.texture[0].width;
-			g_cub.temp.floorTexY = (int)(g_cub.temp.currentFloorY * g_cub.texture[0].height) % g_cub.texture[0].height;
-
-			g_cub.temp.floorTexture = 3;
-
-			//floor
-			g_cub.window.buf[y][x] = (g_cub.texture[g_cub.temp.floorTexture].data[g_cub.texture[0].width * g_cub.temp.floorTexY + g_cub.temp.floorTexX] >> 1) & 8355711;
-			//ceiling (symmetrical!)
-			g_cub.window.buf[g_cub.window.height - y][x] = g_cub.texture[3].data[g_cub.texture[0].width * g_cub.temp.floorTexY + g_cub.temp.floorTexX];
-		}
 	}
 }
 
@@ -336,13 +284,16 @@ int	main(int ac, char **av)
 	g_cub.player.planeY = 0.66;
 	g_cub.player.moveSpeed = 0.05;
 	g_cub.player.rotSpeed = 0.05;
-
-	map_parser(av[1], &str_arr);
 	
-	// g_cub.win = mlx_new_window(info.mlx, width, height, "mlx");
+	g_cub.window.width = 640;
+	g_cub.window.height = 480;
 
-	// info.img.img = mlx_new_image(info.mlx, width, height);
-	// info.img.data = (int *)mlx_get_data_addr(info.img.img, &info.img.bpp, &info.img.size_l, &info.img.endian);
+	// map_parser(av[1], &str_arr);
+	
+	g_cub.win = mlx_new_window(g_cub.mlx, g_cub.window.width, g_cub.window.height, "mlx");
+
+	g_cub.img.img = mlx_new_image(g_cub.mlx, g_cub.window.width, g_cub.window.height);
+	g_cub.img.data = (int *)mlx_get_data_addr(g_cub.img.img, &g_cub.img.bpp, &g_cub.img.size_l, &g_cub.img.endian);
 
 	mlx_loop_hook(g_cub.mlx, &main_loop, &g_cub);
 	mlx_hook(g_cub.win, X_EVENT_KEY_PRESS, 0, &key_press, &g_cub);
