@@ -7,6 +7,7 @@
 #include <mlx.h>
 #include <unistd.h>
 #include <limits.h>
+#include <errno.h>
 #include "get_next_line/get_next_line.h"
 
 // typedef struct	s_img
@@ -187,7 +188,7 @@ typedef struct	s_cub
 	t_player	player;
 	t_texture	texture[5];
 	t_rgb		floor;
-	t_rgb		ceil;
+	t_rgb		ceiling;
 	// t_list		*sprite;
 	t_map		map;
 	t_control	control;
@@ -197,23 +198,28 @@ typedef struct	s_cub
 
 extern t_cub g_cub;
 
-int			map_parser(char *map, t_str_arr *str_arr);
-int			is_included(char c, char *set);
-void		free_2d_arr(char **arr, int size);
-void		ft_list_strjoin(t_str_arr *str_arr, char *str);
+int		set_cub(char *map_file_path);
+int		init_cub(t_str_arr *conf);
+int		read_file_to_buf(char *map_file_path, t_str_arr *conf);
+int		parse_value(char *key);
+t_rgb	set_rgbcolor(char *value);
+void	set_window(int width, int height);
+int		set_texture(char *key, char *file_path);
+int		load_texture(t_texture *texture, char *file_path);
+void	check_map_size(t_str_arr *arr, int i);
+void	**set_map(char **strs, int start);
+void	init_player(t_map *map);
+void	set_player(t_player *player, int x, int y, char dir);
+void	free_2d_arr(char **arr, int size);
+int		ft_2d_arr_size(char **arr);
+int		is_contain(char c, char *str);
+char	**init_chars_array(int row, int col, char c);
+int		ft_list_strjoin(t_str_arr *str_arr, char *str);
+int		print_error(char *message);
+
+
+
 int			key_press(int key, t_info *info);
 int			main_loop(t_info *info);
 void		calc(t_info *info);
 void		draw(t_info *info);
-int			set_cub(t_cub *cub, t_str_arr *conf);
-char		**init_chars_array(int row, int col, char c);
-char		**init_map(char **strs, int start, t_map *map);
-void		calc_size(t_str_arr *arr, int i, t_map *map);
-t_window	init_window(int width, int height);
-t_rgb		init_rgb(char *s);
-int			load_texture(t_texture *texture, char *file_path);
-int			parse_key_texture(t_cub *cub, char *key, char *file_path);
-int			parse_key(t_cub *cub, char *s);
-void		set_player(t_player *player, int x, int y, char dir);
-t_player	init_player(t_map *map);
-

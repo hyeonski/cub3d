@@ -5,6 +5,8 @@
 		"string_view": "c",
 		"vector": "c",
 		"stdlib.h": "c",
-		"ios": "c"
+		"ios": "c",
+		"bitset": "c",
+		"locale": "c"
 	}
 }

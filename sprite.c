@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/29 20:28:54 by yohlee            #+#    #+#             */
-/*   Updated: 2020/12/12 23:13:30 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/13 10:42:55 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,10 +235,7 @@ void	calc(t_info *info)
 			floorX += floorStepX;
 			floorY += floorStepY;
 			// choose texture and draw the pixel
-			int checkerBoardPattern = (int)(cellX + cellY) & 1;
-			int floorTexture;
-			if(checkerBoardPattern == 0) floorTexture = 3;
-			else floorTexture = 4;
+			int floorTexture = 3;
 			int ceilingTexture = 6;
 			int color;
 			// floor
@@ -581,7 +578,7 @@ int	main(void)
 	info.moveSpeed = 0.05;
 	info.rotSpeed = 0.05;
 	
-	info.win = mlx_new_window(info.mlx, width, height, "mlx");
+	info.win = mlx_new_window(info.mlx, width, height, "><");
 
 	info.img.img = mlx_new_image(info.mlx, width, height);
 	info.img.data = (int *)mlx_get_data_addr(info.img.img, &info.img.bpp, &info.img.size_l, &info.img.endian);
