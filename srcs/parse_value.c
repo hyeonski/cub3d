@@ -6,12 +6,11 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 12:38:22 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/13 14:42:41 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/13 16:09:33 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
-
+#include "../includes/cub3d.h"
 
 int		load_texture(t_texture *texture, char *file_path)
 {
@@ -81,8 +80,8 @@ int		parse_value(char *key)
 	int		size;
 
 	res = ft_split(key, ' ');
-	size = ft_2darr_size(res);
-	if (ft_strlen(res[0]) == 1 && is_contain("RFC", res[0][0]))
+	size = ft_2d_arr_size(res);
+	if (ft_strlen(res[0]) == 1 && is_contain(res[0][0], "RFC"))
 	{
 		if (res[0][0] == 'R')
 			set_window(ft_atoi(res[1]), ft_atoi(res[2]));

@@ -6,13 +6,13 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 16:53:09 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/13 14:45:28 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/13 16:10:19 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
-void		**set_map(char **strs, int start)
+void		set_map(char **strs, int start)
 {
 	char	**data;
 	int		i;

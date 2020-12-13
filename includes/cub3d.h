@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <errno.h>
-#include "get_next_line/get_next_line.h"
+#include "get_next_line.h"
 
 // typedef struct	s_img
 // {
@@ -79,17 +79,7 @@ typedef struct	s_temp
 	int ceilingTexture;
 	int color;
 	double cameraX;
-	double rayDirX;
-	double rayDirY;
-	int mapX;
-	int mapY;
-	double sideDistX;
-	double sideDistY;
-	double deltaDistX;
-	double deltaDistY;
-	double perpWallDist;
-	int stepX;
-	int stepY;
+	
 	int hit;
 	int side;
 	int lineHeight;
@@ -139,8 +129,8 @@ typedef struct	s_player
 
 typedef struct	s_window
 {
-	int width;
-	int height;
+	int 	width;
+	int 	height;
 	int		**buf;
 }				t_window;
 
@@ -172,17 +162,34 @@ typedef struct	s_control
 	// t_pair_int	new_mouse_point;
 }				t_control;
 
-
-
 typedef struct	s_str_arr {
 	int		size;
 	char	**elem;
 }				t_str_arr;
 
+typedef struct	s_ray
+{
+	double rayDirX;
+	double rayDirY;
+	int mapX;
+	int mapY;
+	double sideDistX;
+	double sideDistY;
+	double deltaDistX;
+	double deltaDistY;
+	double perpWallDist;
+	int stepX;
+	int stepY;
+}				t_ray;
+
+
 typedef struct	s_cub
 {
 	void	*mlx;
 	void	*win;
+
+	void	*imgptr;
+	int		*data;
 	t_img	img;
 	t_window	window;
 	t_player	player;
@@ -192,34 +199,37 @@ typedef struct	s_cub
 	// t_list		*sprite;
 	t_map		map;
 	t_control	control;
-	t_temp	temp;
-	double		*zbuf;
+	t_ray		ray;
+	t_temp		temp;
+	double		*zBuffer;
 }				t_cub;
 
 extern t_cub g_cub;
 
-int		set_cub(char *map_file_path);
-int		init_cub(t_str_arr *conf);
-int		read_file_to_buf(char *map_file_path, t_str_arr *conf);
-int		parse_value(char *key);
-t_rgb	set_rgbcolor(char *value);
-void	set_window(int width, int height);
-int		set_texture(char *key, char *file_path);
-int		load_texture(t_texture *texture, char *file_path);
-void	check_map_size(t_str_arr *arr, int i);
-void	**set_map(char **strs, int start);
-void	init_player(t_map *map);
-void	set_player(t_player *player, int x, int y, char dir);
-void	free_2d_arr(char **arr, int size);
-int		ft_2d_arr_size(char **arr);
-int		is_contain(char c, char *str);
-char	**init_chars_array(int row, int col, char c);
-int		ft_list_strjoin(t_str_arr *str_arr, char *str);
-int		print_error(char *message);
+int			set_cub(char *map_file_path);
+int			init_cub(t_str_arr *conf);
+int			read_file_to_buf(char *map_file_path, t_str_arr *conf);
+int			parse_value(char *key);
+t_rgb		set_rgbcolor(char *value);
+void		set_window(int width, int height);
+int			set_texture(char *key, char *file_path);
+int			load_texture(t_texture *texture, char *file_path);
+void		check_map_size(t_str_arr *arr, int i);
+void		set_map(char **strs, int start);
+void		init_player(t_map *map, t_player *player);
+void		set_player(t_player *player, int x, int y, char dir);
+void		free_2d_arr(char **arr, int size);
+int			ft_2d_arr_size(char **arr);
+int			is_contain(char c, char *str);
+char		**init_chars_array(int row, int col, char c);
+int			ft_list_strjoin(t_str_arr *str_arr, char *str);
+int			print_error(char *message);
+int			is_valid_file_name(char *file_path);
+int			is_valid_cub(t_str_arr *conf);
+int			key_press(int key, t_control *control);
+int			key_release(int key, t_control *control);
+void		update_player_rotation(void);
 
-
-
-int			key_press(int key, t_info *info);
-int			main_loop(t_info *info);
-void		calc(t_info *info);
-void		draw(t_info *info);
+int			main_loop(void);
+void		calc(void);
+void		draw(void);

@@ -6,11 +6,11 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 16:53:12 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/13 14:19:38 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/13 17:09:01 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 void		set_player(t_player *player, int x, int y, char dir)
 {
@@ -38,13 +38,11 @@ void		set_player(t_player *player, int x, int y, char dir)
 	}
 }
 
-void	init_player(t_map *map)
+void	init_player(t_map *map, t_player *player)
 {
-	t_player	p;
 	int			i;
 	int			j;
 
-	ft_bzero(&p, sizeof(p));
 	i = 0;
 	while (i < map->height)
 	{
@@ -53,13 +51,12 @@ void	init_player(t_map *map)
 		{
 			if (is_contain(map->data[i][j], "EWSN"))
 			{
-				set_player(&p, j, i, map->data[i][j]);
+				set_player(player, j, i, map->data[i][j]);
 				map->data[i][j] = '0';
-				return (p);
+				return ;
 			}
 			j++;
 		}
 		i++;
 	}
-	p = g_cub.player;
 }

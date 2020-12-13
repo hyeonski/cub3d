@@ -6,11 +6,11 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 12:22:17 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/13 14:43:28 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/13 17:06:23 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 int		read_file_to_buf(char *map_file_path, t_str_arr *conf)
 {
@@ -24,7 +24,7 @@ int		read_file_to_buf(char *map_file_path, t_str_arr *conf)
 		return (print_error(strerror(errno)));
 	temp = 0;
 	conf->size = 0;
-	while (ret = get_next_line(fd, &temp))
+	while ((ret = get_next_line(fd, &temp)) != 0)
 	{
 		if (ret == -1)
 			return (print_error("error_msg"));
@@ -46,14 +46,14 @@ int		init_cub(t_str_arr *conf)
 	{
 		if (ft_strlen(conf->elem[i]) == 0)
 			continue;
-		if (parse_value(conf->elem[i]) == 0);
+		if (parse_value(conf->elem[i]) == 0)
 			return (0);
 	}
 	check_map_size(conf, i);
 	set_map(conf->elem, i);
-	init_player(&g_cub.map);
+	init_player(&g_cub.map, &g_cub.player);
 	// init_sprite(&cub->sprite, &cub->map);
-	// cub->zbuf = malloc(sizeof(double) * cub->window.width);
+	g_cub.zBuffer = malloc(sizeof(double) * g_cub.window.width);
 	return (1);
 }
 
