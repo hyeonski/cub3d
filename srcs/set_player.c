@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 16:53:12 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/13 17:09:01 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/13 20:58:12 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,27 @@
 
 void		set_player(t_player *player, int x, int y, char dir)
 {
-	player->posX = 0.5 + y;
-	player->posY = 0.5 + x;
+	player->pos_x = 0.5 + y;
+	player->pos_y = 0.5 + x;
 	if (dir == 'E')
 	{
-		player->dirY = 1;
-		player->planeX = 0.66;
+		player->dir_y = 1;
+		player->plane_x = 0.66;
 	}
 	else if (dir == 'W')
 	{
-		player->dirY = -1;
-		player->planeX = -0.66;
+		player->dir_y = -1;
+		player->plane_x = -0.66;
 	}
 	else if (dir == 'S')
 	{
-		player->dirX = 1;
-		player->planeY = -0.66;
+		player->dir_x = 1;
+		player->plane_y = -0.66;
 	}
 	else
 	{
-		player->dirX = -1;
-		player->planeY = 0.66;
+		player->dir_x = -1;
+		player->plane_y = 0.66;
 	}
 }
 

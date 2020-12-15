@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 14:51:47 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/13 17:46:36 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/14 22:10:47 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,29 +57,6 @@ struct Sprite	sprite[numSprites] =
 int		spriteOrder[numSprites];
 double	spriteDistance[numSprites];
 
-// typedef struct	s_info
-// {
-// 	double posX;
-// 	double posY;
-// 	double dirX;
-// 	double dirY;
-// 	double planeX;
-// 	double planeY;
-// 	void	*mlx;
-// 	void	*win;
-// 	int		key_a;
-// 	int		key_w;
-// 	int		key_s;
-// 	int		key_d;
-// 	int		key_esc;
-// 	t_img	img;
-// 	int		buf[height][width];
-// 	double	zBuffer[width];
-// 	int		**texture;
-// 	double	moveSpeed;
-// 	double	rotSpeed;
-// }				t_info;
-
 typedef struct		s_pair
 {
 	double	first;
@@ -120,43 +97,44 @@ void	key_update(void);
 // 	}
 // }
 
-// void	sortSprites(int *order, double *dist, int amount)
-// {
-// 	t_pair	*sprites;
-
-// 	//std::vector<std::pair<double, int>> sprites(amount);
-// 	sprites = (t_pair*)malloc(sizeof(t_pair) * amount);
-// 	for (int i = 0; i < amount; i++)
-// 	{
-// 		sprites[i].first = dist[i];
-// 		sprites[i].second = order[i];
-// 	}
-// 	sort_order(sprites, amount);
-// 	//std::sort(sprites.begin(), sprites.end());
-// 	for (int i = 0; i < amount; i++)
-// 	{
-// 		dist[i] = sprites[amount - i - 1].first;
-// 		order[i] = sprites[amount - i - 1].second;
-// 	}
-// 	free(sprites);
-// }
-
-void	draw(void)
+void	sort_sprite(int *order, double *dist, int amount)
 {
-	for (int y = 0; y < g_cub.window.height; y++)
+	t_pair	*sprites;
+
+	//std::vector<std::pair<double, int>> sprites(amount);
+	sprites = (t_pair*)malloc(sizeof(t_pair) * amount);
+	for (int i = 0; i < amount; i++)
 	{
-		for (int x = 0; x < g_cub.window.width; x++)
-		{
-			g_cub.data[y * g_cub.window.width + x] = g_cub.window.buf[y][x];
-		}
+		sprites[i].first = dist[i];
+		sprites[i].second = order[i];
 	}
-	mlx_put_image_to_window(g_cub.mlx, g_cub.win, g_cub.imgptr, 0, 0);
+	sort_order(sprites, amount);
+	//std::sort(sprites.begin(), sprites.end());
+	for (int i = 0; i < amount; i++)
+	{
+		dist[i] = sprites[amount - i - 1].first;
+		order[i] = sprites[amount - i - 1].second;
+	}
+	free(sprites);
 }
 
-void	calc(void)
+void	update_screen(t_cub *cub, t_window *window)
 {
-	//FLOOR CASTING
-	for(int y = g_cub.window.height / 2 + 1; y < g_cub.window.height; ++y)
+	for (int y = 0; y < window->height; y++)
+	{
+		for (int x = 0; x < window->width; x++)
+		{
+			cub->data[y * window->width + x] = window->buf[y][x];
+		}
+	}
+	mlx_put_image_to_window(cub->mlx, cub->win, cub->imgptr, 0, 0);
+}
+
+void	draw_floor_ceil(t_window *window, t_rgb *floor, t_rgb *ceiling)
+{
+	int color;
+	
+	for(int y = window->height / 2 + 1; y < window->height; ++y)
 	{
 		// // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
 		// float rayDirX0 = g_cub.player.dirX - g_cub.player.planeX;
@@ -164,20 +142,20 @@ void	calc(void)
 		// float rayDirX1 = g_cub.player.dirX + g_cub.player.planeX;
 		// float rayDirY1 = g_cub.player.dirY + g_cub.player.planeY;
 		// // Current y position compared to the center of the screen (the horizon)
-		// int p = y - g_cub.window.height / 2;
+		// int p = y - window->height / 2;
 		// // Vertical position of the camera.
-		// float posZ = 0.5 * g_cub.window.height;
+		// float posZ = 0.5 * window->height;
 		// // Horizontal distance from the camera to the floor for the current row.
 		// // 0.5 is the z position exactly in the middle between floor and ceiling.
 		// float rowDistance = posZ / p;
 		// // calculate the real world step vector we have to add for each x (parallel to camera plane)
 		// // adding step by step avoids multiplications with a weight in the inner loop
-		// float floorStepX = rowDistance * (rayDirX1 - rayDirX0) / g_cub.window.width;
-		// float floorStepY = rowDistance * (rayDirY1 - rayDirY0) / g_cub.window.width;
+		// float floorStepX = rowDistance * (rayDirX1 - rayDirX0) / window->width;
+		// float floorStepY = rowDistance * (rayDirY1 - rayDirY0) / window->width;
 		// // real world coordinates of the leftmost column. This will be updated as we step to the right.
 		// float floorX = g_cub.player.posX + rowDistance * rayDirX0;
 		// float floorY = g_cub.player.posY + rowDistance * rayDirY0;
-		// for(int x = 0; x < g_cub.window.width; ++x)
+		// for(int x = 0; x < window->width; ++x)
 		// {
 		// 	// the cell coord is simply got from the integer parts of floorX and floorY
 		// 	int cellX = (int)(floorX);
@@ -197,274 +175,320 @@ void	calc(void)
 		// 	// floor
 		// 	color = g_cub.texture[floorTexture][texWidth * ty + tx];
 		// 	color = (color >> 1) & 8355711; // make a bit darker
-		// 	g_cub.window.buf[y][x] = color;
+		// 	window->buf[y][x] = color;
 		// 	//ceiling (symmetrical, at height - y - 1 instead of y)
 		// 	color = g_cub.texture[ceilingTexture][texWidth * ty + tx];
 		// 	color = (color >> 1) & 8355711; // make a bit darker
-		// 	g_cub.window.buf[g_cub.window.height - y - 1][x] = color;
+		// 	window->buf[window->height - y - 1][x] = color;
 		// }
-		for(int x = 0; x < g_cub.window.width; ++x)
-		{
-			int color;
-			
-			//floor
-			color = (g_cub.floor.r << 16) + (g_cub.floor.g << 8) + g_cub.floor.b;
-			g_cub.window.buf[y][x] = color;
-			//ceiling (symmetrical, at height - y - 1 instead of y)
-			color = (g_cub.ceiling.r << 16) + (g_cub.ceiling.g << 8) + g_cub.ceiling.b;
-			g_cub.window.buf[g_cub.window.height - y - 1][x] = color;
+		for(int x = 0; x < window->width; ++x)
+		{			
+			color = (floor->r << 16) + (floor->g << 8) + floor->b;
+			window->buf[y][x] = color;
+			color = (ceiling->r << 16) + (ceiling->g << 8) + ceiling->b;
+			window->buf[window->height - y - 1][x] = color;
 		}
 	}
-	// WALL CASTING
-	for(int x = 0; x < g_cub.window.width; x++)
-	{
-		//calculate ray position and direction
-		double cameraX = 2 * x / (double)g_cub.window.width - 1; //x-coordinate in camera space
-		g_cub.ray.rayDirX = g_cub.player.dirX + g_cub.player.planeX * cameraX;
-		g_cub.ray.rayDirY = g_cub.player.dirY + g_cub.player.planeY * cameraX;
-		//which box of the map we're in
-		g_cub.ray.mapX = (int)g_cub.player.posX;
-		g_cub.ray.mapY = (int)g_cub.player.posY;
-		//length of ray from one x or y-side to next x or y-side
-		g_cub.ray.deltaDistX = fabs(1 / g_cub.ray.rayDirX);
-		g_cub.ray.deltaDistY = fabs(1 / g_cub.ray.rayDirY);
-		//what direction to step in x or y-direction (either +1 or -1)
-		int hit = 0; //was there a wall hit?
-		int side; //was a NS or a EW wall hit?
-		//calculate step and initial sideDist
-		if (g_cub.ray.rayDirX < 0)
-		{
-			g_cub.ray.stepX = -1;
-			g_cub.ray.sideDistX = (g_cub.player.posX - g_cub.ray.mapX) * g_cub.ray.deltaDistX;
-		}
-		else
-		{
-			g_cub.ray.stepX = 1;
-			g_cub.ray.sideDistX = (g_cub.ray.mapX + 1.0 - g_cub.player.posX) * g_cub.ray.deltaDistX;
-		}
-		if (g_cub.ray.rayDirY < 0)
-		{
-			g_cub.ray.stepY = -1;
-			g_cub.ray.sideDistY = (g_cub.player.posY - g_cub.ray.mapY) * g_cub.ray.deltaDistY;
-		}
-		else
-		{
-			g_cub.ray.stepY = 1;
-			g_cub.ray.sideDistY = (g_cub.ray.mapY + 1.0 - g_cub.player.posY) * g_cub.ray.deltaDistY;
-		}
-		//perform DDA
-		while (hit == 0)
-		{
-			//jump to next map square, OR in x-direction, OR in y-direction
-			if (g_cub.ray.sideDistX < g_cub.ray.sideDistY)
-			{
-				g_cub.ray.sideDistX += g_cub.ray.deltaDistX;
-				g_cub.ray.mapX +=g_cub.ray. stepX;
-				side = 0;
-			}
-			else
-			{
-				g_cub.ray.sideDistY += g_cub.ray.deltaDistY;
-				g_cub.ray.mapY += g_cub.ray.stepY;
-				side = 1;
-			}
-			//Check if ray has hit a wall
-			if (g_cub.map.data[g_cub.ray.mapX][g_cub.ray.mapY] == '1')
-				hit = 1;
-		}
-		//Calculate distance of perpendicular ray (Euclidean distance will give fisheye effect!)
-		if (side == 0)
-			g_cub.ray.perpWallDist = (g_cub.ray.mapX - g_cub.player.posX + (1 - g_cub.ray.stepX) / 2) / g_cub.ray.rayDirX;
-		else
-			g_cub.ray.perpWallDist = (g_cub.ray.mapY - g_cub.player.posY + (1 - g_cub.ray.stepY) / 2) / g_cub.ray.rayDirY;
-		//Calculate height of line to draw on screen
-		int lineHeight = (int)(g_cub.window.height / g_cub.ray.perpWallDist);
-		//calculate lowest and highest pixel to fill in current stripe
-		int drawStart = -lineHeight / 2 + g_cub.window.height / 2;
-		if (drawStart < 0)
-			drawStart = 0;
-		int drawEnd = lineHeight / 2 + g_cub.window.height / 2;
-		if (drawEnd >= g_cub.window.height)
-			drawEnd = g_cub.window.height - 1;
-		//texturing calculations
-		int texNum;
-		if (side == 1)
-		{
-			texNum = g_cub.ray.rayDirY > 0 ? 0 : 1;
-		}
-		else
-		{
-			texNum = g_cub.ray.rayDirX > 0 ? 2 : 3;
-		}
-		//calculate value of wallX
-		double wallX; //where exactly the wall was hit
-		if (side == 0)
-			wallX = g_cub.player.posY + g_cub.ray.perpWallDist * g_cub.ray.rayDirY;
-		else
-			wallX = g_cub.player.posX + g_cub.ray.perpWallDist * g_cub.ray.rayDirX;
-		wallX -= floor((wallX));
-		//x coordinate on the texture
-		int texX = (int)(wallX * (double)g_cub.texture[texNum].width);
-		if (side == 0 && g_cub.ray.rayDirX > 0)
-			texX = g_cub.texture[texNum].width - texX - 1;
-		if (side == 1 && g_cub.ray.rayDirY < 0)
-			texX = g_cub.texture[texNum].width - texX - 1;
-		// TODO: an integer-only bresenham or DDA like algorithm could make the texture coordinate stepping faster
-		// How much to increase the texture coordinate per screen pixel
-		double step = 1.0 * g_cub.texture[texNum].height / lineHeight;
-		// Starting texture coordinate
-		double texPos = (drawStart - g_cub.window.height / 2 + lineHeight / 2) * step;
-		for (int y = drawStart; y < drawEnd; y++)
-		{
-			// Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
-			int texY = (int)texPos & (g_cub.texture[texNum].height - 1);
-			texPos += step;
-			int color = g_cub.texture[texNum].data[g_cub.texture[texNum].height * texY + texX];
-			//make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
-			if (side == 1)
-				color = (color >> 1) & 8355711;
-			g_cub.window.buf[y][x] = color;
-		}
 
-		//SET THE ZBUFFER FOR THE SPRITE CASTING
-		g_cub.zBuffer[x] = g_cub.ray.perpWallDist; //perpendicular distance is used
-	}
-
-	// //SPRITE CASTING
-	// //sort sprites from far to close
-	// for(int i = 0; i < numSprites; i++)
-	// {
-	// 	spriteOrder[i] = i;
-	// 	spriteDistance[i] = ((g_cub.posX - sprite[i].x) * (g_cub.posX - sprite[i].x) + (g_cub.posY - sprite[i].y) * (g_cub.posY - sprite[i].y)); //sqrt not taken, unneeded
-	// }
-	// sortSprites(spriteOrder, spriteDistance, numSprites);
-	// //after sorting the sprites, do the projection and draw them
-	// for(int i = 0; i < numSprites; i++)
-	// {
-	// 	//translate sprite position to relative to camera
-	// 	double spriteX = sprite[spriteOrder[i]].x - g_cub.posX;
-	// 	double spriteY = sprite[spriteOrder[i]].y - g_cub.posY;
-
-	// 	//transform sprite with the inverse camera matrix
-	// 	// [ planeX   dirX ] -1                                       [ dirY      -dirX ]
-	// 	// [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
-	// 	// [ planeY   dirY ]                                          [ -planeY  planeX ]
-
-	// 	double invDet = 1.0 / (g_cub.planeX * g_cub.dirY - g_cub.player.dirX * g_cub.planeY); //required for correct matrix multiplication
-
-	// 	double transformX = invDet * (g_cub.dirY * spriteX - g_cub.dirX * spriteY);
-	// 	double transformY = invDet * (-g_cub.planeY * spriteX + g_cub.planeX * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
-
-	// 	int spriteScreenX = (int)((width / 2) * (1 + transformX / transformY));
-
-	// 	//parameters for scaling and moving the sprites
-	// 	#define uDiv 1
-	// 	#define vDiv 1
-	// 	#define vMove 0.0
-	// 	int vMoveScreen = (int)(vMove / transformY);
-
-	// 	//calculate height of the sprite on screen
-	// 	int spriteHeight = (int)fabs((height / transformY) / vDiv); //using "transformY" instead of the real distance prevents fisheye
-	// 	//calculate lowest and highest pixel to fill in current stripe
-	// 	int drawStartY = -spriteHeight / 2 + height / 2 + vMoveScreen;
-	// 	if(drawStartY < 0) drawStartY = 0;
-	// 	int drawEndY = spriteHeight / 2 + height / 2 + vMoveScreen;
-	// 	if(drawEndY >= height) drawEndY = height - 1;
-
-	// 	//calculate width of the sprite
-	// 	int spriteWidth = (int)fabs((height / transformY) / uDiv);
-	// 	int drawStartX = -spriteWidth / 2 + spriteScreenX;
-	// 	if(drawStartX < 0) drawStartX = 0;
-	// 	int drawEndX = spriteWidth / 2 + spriteScreenX;
-	// 	if(drawEndX >= width) drawEndX = width - 1;
-
-	// 	//loop through every vertical stripe of the sprite on screen
-	// 	for(int stripe = drawStartX; stripe < drawEndX; stripe++)
-	// 	{
-	// 		int texX = (int)((256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth) / 256);
-	// 		//the conditions in the if are:
-	// 		//1) it's in front of camera plane so you don't see things behind you
-	// 		//2) it's on the screen (left)
-	// 		//3) it's on the screen (right)
-	// 		//4) ZBuffer, with perpendicular distance
-	// 		if(transformY > 0 && stripe > 0 && stripe < width && transformY < g_cub.zBuffer[stripe])
-	// 		for(int y = drawStartY; y < drawEndY; y++) //for every pixel of the current stripe
-	// 		{
-	// 			int d = (y-vMoveScreen) * 256 - height * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
-	// 			int texY = ((d * texHeight) / spriteHeight) / 256;
-	// 			int color = g_cub.texture[sprite[spriteOrder[i]].texture][texWidth * texY + texX]; //get current color from the texture
-	// 			if((color & 0x00FFFFFF) != 0) g_cub.window.buf[y][stripe] = color; //paint pixel if it isn't black, black is the invisible color
-	// 		}
-	// 	}
-	// }
 }
 
-int	main_loop(void)
+int		get_tex_pixel(t_tex_info *tex_info, t_draw_info *draw_info)
 {
-	calc();
-	draw();
-	update_player_rotation();
+	int tex_y;
+	int position;
+	int color;
+
+	tex_y = (int)tex_info->tex_pos & (tex_info->tex_height - 1);
+	position = tex_info->tex_height * tex_y + tex_info->tex_x;
+	color = g_cub.texture[tex_info->tex_num].data[position];
+	if (draw_info->ray.side == 1)
+		color = (color >> 1) & 8355711;
+	return (color);
+}
+
+void	init_ray(int x, int w, t_ray *ray, t_player *player)
+{
+	double camera_x;
+	
+	camera_x = 2 * x / (double)w - 1;
+	ray->raydir_x = player->dir_x + player->plane_x * camera_x;
+	ray->raydir_y = player->dir_y + player->plane_y * camera_x;
+	ray->map_x = (int)player->pos_x;
+	ray->map_y = (int)player->pos_y;
+}
+
+void	calc_delta_dist(t_ray *ray)
+{
+	ray->delta_dist_x = fabs(1 / ray->raydir_x);
+	ray->delta_dist_y = fabs(1 / ray->raydir_y);
+}
+
+void	calc_step_side_dist(t_ray *ray, t_player *player)
+{
+	if (ray->raydir_x < 0)
+	{
+		ray->step_x = -1;
+		ray->side_dist_x = (player->pos_x - ray->map_x) * ray->delta_dist_x;
+	}
+	else
+	{
+		ray->step_x = 1;
+		ray->side_dist_x = (ray->map_x + 1.0 - player->pos_x) * ray->delta_dist_x;
+	}
+	if (ray->raydir_y < 0)
+	{
+		ray->step_y = -1;
+		ray->side_dist_y = (player->pos_y - ray->map_y) * ray->delta_dist_y;
+	}
+	else
+	{
+		ray->step_y = 1;
+		ray->side_dist_y = (ray->map_y + 1.0 - player->pos_y) * ray->delta_dist_y;
+	}
+}
+
+void	dda(t_ray *ray)
+{
+	while (1)
+	{
+		if (ray->side_dist_x < ray->side_dist_y)
+		{
+			ray->side_dist_x += ray->delta_dist_x;
+			ray->map_x += ray->step_x;
+			ray->side = 0;
+		}
+		else
+		{
+			ray->side_dist_y += ray->delta_dist_y;
+			ray->map_y += ray->step_y;
+			ray->side = 1;
+		}
+		if (g_cub.map.data[ray->map_x][ray->map_y] == '1')
+			break ;
+	}
+}
+
+void	calc_perp_wall_dist(t_draw_info *draw_info, t_ray *ray, t_player *player)
+{
+	if (ray->side == 0)
+		draw_info->perp_wall_dist = (ray->map_x - player->pos_x + (1 - ray->step_x) / 2) / ray->raydir_x;
+	else
+		draw_info->perp_wall_dist = (ray->map_y - player->pos_y + (1 - ray->step_y) / 2) / ray->raydir_y;
+}
+
+void	get_draw_info(int x, t_draw_info *draw_info, t_window *window)
+{
+	int			height;
+
+	height = window->height;
+	init_ray(x, window->width, &draw_info->ray, &g_cub.player);
+	calc_delta_dist(&draw_info->ray);
+	calc_step_side_dist(&draw_info->ray, &g_cub.player);
+	dda(&draw_info->ray);
+	calc_perp_wall_dist(draw_info, &draw_info->ray, &g_cub.player);
+	draw_info->line_height = (int)(height / draw_info->perp_wall_dist);
+	draw_info->draw_start = -draw_info->line_height / 2 + height / 2;
+	if (draw_info->draw_start < 0)
+		draw_info->draw_start = 0;
+	draw_info->draw_end = draw_info->line_height / 2 + height / 2;
+	if (draw_info->draw_end >= height)
+		draw_info->draw_end = height - 1;		
+}
+
+void	select_texture(t_tex_info *tex_info, t_player *player, t_draw_info *draw_info)
+{
+	if (draw_info->ray.side == 1)
+	{
+		tex_info->tex_num = draw_info->ray.raydir_y > 0 ? 0 : 1;
+		tex_info->wall_x = player->pos_x + draw_info->perp_wall_dist * draw_info->ray.raydir_x;
+	}
+	else
+	{
+		tex_info->tex_num = draw_info->ray.raydir_x > 0 ? 2 : 3;
+		tex_info->wall_x = player->pos_y + draw_info->perp_wall_dist * draw_info->ray.raydir_y;
+	}
+}
+
+void	get_tex_info(t_tex_info *tex_info, t_draw_info *draw_info, t_ray *ray)
+{
+	select_texture(tex_info, &g_cub.player, draw_info);
+	tex_info->wall_x -= floor((tex_info->wall_x));
+	tex_info->tex_width = g_cub.texture[tex_info->tex_num].width;
+	tex_info->tex_height = g_cub.texture[tex_info->tex_num].height;
+	tex_info->tex_x = (int)(tex_info->wall_x * (double)tex_info->tex_width);
+	if(ray->side == 0 && ray->raydir_x > 0)
+		tex_info->tex_x = tex_info->tex_width - tex_info->tex_x - 1;
+	if(ray->side == 1 && ray->raydir_y < 0)
+		tex_info->tex_x = tex_info->tex_width - tex_info->tex_x - 1;
+	tex_info->step = 1.0 * tex_info->tex_height / draw_info->line_height;
+	tex_info->tex_pos = (draw_info->draw_start - g_cub.window.height / 2 + draw_info->line_height / 2) * tex_info->step;
+
+}
+
+void	draw_wall(t_cub *cub, t_window *window)
+{
+	int x;
+	int y;
+	int color;
+	t_draw_info		draw_info;
+	t_tex_info		tex_info;
+
+	x = 0;
+	while (x < window->width)
+	{
+		
+		get_draw_info(x, &draw_info, window);
+		get_tex_info(&tex_info, &draw_info, &draw_info.ray);
+		y = draw_info.draw_start;
+		while (y < draw_info.draw_end)
+		{
+			color = get_tex_pixel(&tex_info, &draw_info);
+			window->buf[y][x] = color;
+			tex_info.tex_pos += tex_info.step;
+			y++;
+		}
+		cub->zBuffer[x] = draw_info.perp_wall_dist; 
+		x++;
+	}
+}
+
+void	draw_sprite(t_cub *cub)
+{
+	//SPRITE CASTING
+	//sort sprites from far to close
+	for(int i = 0; i < numSprites; i++)
+	{
+		spriteOrder[i] = i;
+		spriteDistance[i] = ((g_cub.posX - sprite[i].x) * (g_cub.posX - sprite[i].x) + (g_cub.posY - sprite[i].y) * (g_cub.posY - sprite[i].y)); //sqrt not taken, unneeded
+	}
+	sortSprites(spriteOrder, spriteDistance, numSprites);
+	//after sorting the sprites, do the projection and draw them
+	for(int i = 0; i < numSprites; i++)
+	{
+		//translate sprite position to relative to camera
+		double spriteX = sprite[spriteOrder[i]].x - g_cub.posX;
+		double spriteY = sprite[spriteOrder[i]].y - g_cub.posY;
+
+		//transform sprite with the inverse camera matrix
+		// [ planeX   dirX ] -1                                       [ dirY      -dirX ]
+		// [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
+		// [ planeY   dirY ]                                          [ -planeY  planeX ]
+
+		double invDet = 1.0 / (g_cub.planeX * g_cub.dirY - g_cub.player.dirX * g_cub.planeY); //required for correct matrix multiplication
+
+		double transformX = invDet * (g_cub.dirY * spriteX - g_cub.dirX * spriteY);
+		double transformY = invDet * (-g_cub.planeY * spriteX + g_cub.planeX * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
+
+		int spriteScreenX = (int)((width / 2) * (1 + transformX / transformY));
+
+		//parameters for scaling and moving the sprites
+		#define uDiv 1
+		#define vDiv 1
+		#define vMove 0.0
+		int vMoveScreen = (int)(vMove / transformY);
+
+		//calculate height of the sprite on screen
+		int spriteHeight = (int)fabs((height / transformY) / vDiv); //using "transformY" instead of the real distance prevents fisheye
+		//calculate lowest and highest pixel to fill in current stripe
+		int drawStartY = -spriteHeight / 2 + height / 2 + vMoveScreen;
+		if(drawStartY < 0) drawStartY = 0;
+		int drawEndY = spriteHeight / 2 + height / 2 + vMoveScreen;
+		if(drawEndY >= height) drawEndY = height - 1;
+
+		//calculate width of the sprite
+		int spriteWidth = (int)fabs((height / transformY) / uDiv);
+		int drawStartX = -spriteWidth / 2 + spriteScreenX;
+		if(drawStartX < 0) drawStartX = 0;
+		int drawEndX = spriteWidth / 2 + spriteScreenX;
+		if(drawEndX >= width) drawEndX = width - 1;
+
+		//loop through every vertical stripe of the sprite on screen
+		for(int stripe = drawStartX; stripe < drawEndX; stripe++)
+		{
+			int texX = (int)((256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth) / 256);
+			//the conditions in the if are:
+			//1) it's in front of camera plane so you don't see things behind you
+			//2) it's on the screen (left)
+			//3) it's on the screen (right)
+			//4) ZBuffer, with perpendicular distance
+			if(transformY > 0 && stripe > 0 && stripe < width && transformY < g_cub.zBuffer[stripe])
+			for(int y = drawStartY; y < drawEndY; y++) //for every pixel of the current stripe
+			{
+				int d = (y-vMoveScreen) * 256 - height * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
+				int texY = ((d * texHeight) / spriteHeight) / 256;
+				int color = g_cub.texture[sprite[spriteOrder[i]].texture][texWidth * texY + texX]; //get current color from the texture
+				if((color & 0x00FFFFFF) != 0) g_cub.window.buf[y][stripe] = color; //paint pixel if it isn't black, black is the invisible color
+			}
+		}
+	}
+}
+
+int	main_loop(t_cub *cub)
+{
+	draw_floor_ceil(&cub->window, &cub->floor, &cub->ceiling);
+	draw_wall(cub, &cub->window);
+	draw_sprite(cub);
+	update_screen(cub, &cub->window);
+	update_player_rotation(&cub->player, &cub->map);
 	return (0);
 }
 
-void	update_player_rotation(void)
+void	update_player_rotation(t_player *player, t_map *map)
 {
+	double old_dir_x;
+	double old_plane_x;
+
 	if (g_cub.control.keyboard[KEY_W])
 	{
-		if (g_cub.map.data[(int)(g_cub.player.posX + g_cub.player.dirX * g_cub.player.moveSpeed)][(int)(g_cub.player.posY)] == '0')
-			g_cub.player.posX += g_cub.player.dirX * g_cub.player.moveSpeed;
-		if (g_cub.map.data[(int)(g_cub.player.posX)][(int)(g_cub.player.posY + g_cub.player.dirY * g_cub.player.moveSpeed)] == '0')
-			g_cub.player.posY += g_cub.player.dirY * g_cub.player.moveSpeed;
+		if (map->data[(int)(player->pos_x + player->dir_x * player->move_speed)][(int)(player->pos_y)] == '0')
+			player->pos_x += player->dir_x * player->move_speed;
+		if (map->data[(int)(player->pos_x)][(int)(player->pos_y + player->dir_y * player->move_speed)] == '0')
+			player->pos_y += player->dir_y * player->move_speed;
 	}
-	//move backwards if no wall behind you
 	if (g_cub.control.keyboard[KEY_S])
 	{
-		if (g_cub.map.data[(int)(g_cub.player.posX - g_cub.player.dirX * g_cub.player.moveSpeed)][(int)(g_cub.player.posY)] == '0')
-			g_cub.player.posX -= g_cub.player.dirX * g_cub.player.moveSpeed;
-		if (g_cub.map.data[(int)(g_cub.player.posX)][(int)(g_cub.player.posY - g_cub.player.dirY * g_cub.player.moveSpeed)] == '0')
-			g_cub.player.posY -= g_cub.player.dirY * g_cub.player.moveSpeed;
+		if (map->data[(int)(player->pos_x - player->dir_x * player->move_speed)][(int)(player->pos_y)] == '0')
+			player->pos_x -= player->dir_x * player->move_speed;
+		if (map->data[(int)(player->pos_x)][(int)(player->pos_y - player->dir_y * player->move_speed)] == '0')
+			player->pos_y -= player->dir_y * player->move_speed;
 	}
-	//rotate to the right
 	if (g_cub.control.keyboard[KEY_D])
 	{
-		//both camera direction and camera plane must be rotated
-		double oldDirX = g_cub.player.dirX;
-		g_cub.player.dirX = g_cub.player.dirX * cos(-g_cub.player.rotSpeed) - g_cub.player.dirY * sin(-g_cub.player.rotSpeed);
-		g_cub.player.dirY = oldDirX * sin(-g_cub.player.rotSpeed) + g_cub.player.dirY * cos(-g_cub.player.rotSpeed);
-		double oldPlaneX = g_cub.player.planeX;
-		g_cub.player.planeX = g_cub.player.planeX * cos(-g_cub.player.rotSpeed) - g_cub.player.planeY * sin(-g_cub.player.rotSpeed);
-		g_cub.player.planeY = oldPlaneX * sin(-g_cub.player.rotSpeed) + g_cub.player.planeY * cos(-g_cub.player.rotSpeed);
+		old_dir_x = player->dir_x;
+		player->dir_x = player->dir_x * cos(-player->rot_speed) - player->dir_y * sin(-player->rot_speed);
+		player->dir_y = old_dir_x * sin(-player->rot_speed) + player->dir_y * cos(-player->rot_speed);
+		old_plane_x = player->plane_x;
+		player->plane_x = player->plane_x * cos(-player->rot_speed) - player->plane_y * sin(-player->rot_speed);
+		player->plane_y = old_plane_x * sin(-player->rot_speed) + player->plane_y * cos(-player->rot_speed);
 	}
-	//rotate to the left
 	if (g_cub.control.keyboard[KEY_A])
 	{
-		//both camera direction and camera plane must be rotated
-		double oldDirX = g_cub.player.dirX;
-		g_cub.player.dirX = g_cub.player.dirX * cos(g_cub.player.rotSpeed) - g_cub.player.dirY * sin(g_cub.player.rotSpeed);
-		g_cub.player.dirY = oldDirX * sin(g_cub.player.rotSpeed) + g_cub.player.dirY * cos(g_cub.player.rotSpeed);
-		double oldPlaneX = g_cub.player.planeX;
-		g_cub.player.planeX = g_cub.player.planeX * cos(g_cub.player.rotSpeed) - g_cub.player.planeY * sin(g_cub.player.rotSpeed);
-		g_cub.player.planeY = oldPlaneX * sin(g_cub.player.rotSpeed) + g_cub.player.planeY * cos(g_cub.player.rotSpeed);
+		old_dir_x = player->dir_x;
+		player->dir_x = player->dir_x * cos(player->rot_speed) - player->dir_y * sin(player->rot_speed);
+		player->dir_y = old_dir_x * sin(player->rot_speed) + player->dir_y * cos(player->rot_speed);
+		old_plane_x = player->plane_x;
+		player->plane_x = player->plane_x * cos(player->rot_speed) - player->plane_y * sin(player->rot_speed);
+		player->plane_y = old_plane_x * sin(player->rot_speed) + player->plane_y * cos(player->rot_speed);
 	}
 }
 
-void		init_game(void)
+void		init_game(t_cub *cub)
 {
 	int		temp;
 
-	g_cub.player.moveSpeed = 0.05;
-	g_cub.player.rotSpeed = 0.02;
+	cub->player.move_speed = 0.05;
+	cub->player.rot_speed = 0.02;
 	
-	g_cub.win = mlx_new_window(g_cub.mlx, g_cub.window.width, g_cub.window.height, "mlx");
+	cub->win = mlx_new_window(cub->mlx, cub->window.width, cub->window.height, "mlx");
 
-	g_cub.imgptr = mlx_new_image(g_cub.mlx, g_cub.window.width, g_cub.window.height);
-	g_cub.data = (int *)mlx_get_data_addr(g_cub.imgptr, &temp, &temp, &temp);
+	cub->imgptr = mlx_new_image(cub->mlx, cub->window.width, cub->window.height);
+	cub->data = (int *)mlx_get_data_addr(cub->imgptr, &temp, &temp, &temp);
 
-	mlx_loop_hook(g_cub.mlx, &main_loop, &g_cub.control);
-	mlx_hook(g_cub.win, X_EVENT_KEY_PRESS, 0, &key_press, &g_cub.control);
-	mlx_hook(g_cub.win, X_EVENT_KEY_RELEASE, 0, &key_release, &g_cub.control);
+	mlx_loop_hook(cub->mlx, &main_loop, cub);
+	mlx_hook(cub->win, X_EVENT_KEY_PRESS, 0, &key_press, &cub->control);
+	mlx_hook(cub->win, X_EVENT_KEY_RELEASE, 0, &key_release, &cub->control);
 
-	mlx_loop(g_cub.mlx);
+	mlx_loop(cub->mlx);
 }
 
 int		main(int ac, char **av)
@@ -483,7 +507,7 @@ int		main(int ac, char **av)
 	// 							g_cub.window.height);
 	// }
 	// else
-	init_game();
+	init_game(&g_cub);
 
 	return (0);
 }

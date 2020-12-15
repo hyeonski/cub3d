@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   raycast.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gicho <gicho@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/24 12:43:43 by gicho             #+#    #+#             */
-/*   Updated: 2020/10/24 12:43:43 by gicho            ###   ########.fr       */
+/*   Updated: 2020/12/13 21:13:35 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raycast.h"
+#include <stdio.h>
 
 void	dda(t_ray *ray, char **map, t_pair_double side_dist)
 {

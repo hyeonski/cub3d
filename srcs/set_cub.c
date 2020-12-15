@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 12:22:17 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/13 17:06:23 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/16 00:05:14 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,32 @@ int		read_file_to_buf(char *map_file_path, t_str_arr *conf)
 	return (0);
 }
 
+int	init_sprite(t_list **head, t_map *map)
+{
+	int			i;
+	int			j;
+	t_sprite	*sprite;
+
+	i = 0;
+	while (i < map->height)
+	{
+		j = 0;
+		while (j < map->width)
+		{
+			if (is_contain(map->data[i][j], "2"))
+			{
+				sprite = malloc(sizeof(t_sprite));
+				sprite->x = 0.5 + i;
+				sprite->y = 0.5 + j;
+				ft_lstpush_back(head, (void*)sprite);
+			}
+			j++;
+		}
+		i++;
+	}
+	return (1);
+}
+
 int		init_cub(t_str_arr *conf)
 {
 	int			i;
@@ -52,7 +78,7 @@ int		init_cub(t_str_arr *conf)
 	check_map_size(conf, i);
 	set_map(conf->elem, i);
 	init_player(&g_cub.map, &g_cub.player);
-	// init_sprite(&cub->sprite, &cub->map);
+	init_sprite(&g_cub.sprite, &g_cub.map);
 	g_cub.zBuffer = malloc(sizeof(double) * g_cub.window.width);
 	return (1);
 }

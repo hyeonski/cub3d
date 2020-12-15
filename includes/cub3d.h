@@ -42,22 +42,6 @@
 
 
 
-
-
-
-
-typedef struct	s_img
-{
-	void	*img;
-	int		*data;
-
-	int		size_l;
-	int		bpp;
-	int		endian;
-	int		img_width;
-	int		img_height;
-}				t_img;
-
 typedef struct	s_temp
 {
 	float rayDirX0;
@@ -106,22 +90,16 @@ typedef struct	s_temp
 	double oldPlaneX;
 }				t_temp;
 
-typedef struct	s_info
-{
-	t_img	img;
-	int		**texture;
-}				t_info;
-
 typedef struct	s_player
 {
-	double posX;
-	double posY;
-	double dirX;
-	double dirY;
-	double planeX;
-	double planeY;
-	double	moveSpeed;
-	double	rotSpeed;
+	double	pos_x;
+	double	pos_y;
+	double 	dir_x;
+	double 	dir_y;
+	double	plane_x;
+	double	plane_y;
+	double	move_speed;
+	double	rot_speed;
 	// t_point_of_view	movement;
 	// t_point_of_view	rotation;
 
@@ -169,37 +147,62 @@ typedef struct	s_str_arr {
 
 typedef struct	s_ray
 {
-	double rayDirX;
-	double rayDirY;
-	int mapX;
-	int mapY;
-	double sideDistX;
-	double sideDistY;
-	double deltaDistX;
-	double deltaDistY;
-	double perpWallDist;
-	int stepX;
-	int stepY;
+	double raydir_x;
+	double raydir_y;
+	int map_x;
+	int map_y;
+	double side_dist_x;
+	double side_dist_y;
+	double delta_dist_x;
+	double delta_dist_y;
+	int step_x;
+	int step_y;
+	int	side;
 }				t_ray;
 
+typedef struct	s_draw_info
+{
+	t_ray	ray;
+	double	perp_wall_dist;
+	int		line_height;
+	int		draw_start;
+	int		draw_end;
+}				t_draw_info;
+
+typedef struct	s_tex_info
+{
+	int		tex_num;
+	int		tex_width;
+	int		tex_height;
+	double	wall_x;
+	int		tex_x;
+	double	step;
+	double	tex_pos;
+}				t_tex_info;
+
+typedef struct		s_sprite
+{
+	double			x;
+	double			y;
+	double			dist;
+	struct s_sprite	*next;
+}					t_sprite;
 
 typedef struct	s_cub
 {
-	void	*mlx;
-	void	*win;
+	void		*mlx;
+	void		*win;
 
-	void	*imgptr;
-	int		*data;
-	t_img	img;
+	void		*imgptr;
+	int			*data;
 	t_window	window;
 	t_player	player;
 	t_texture	texture[5];
 	t_rgb		floor;
 	t_rgb		ceiling;
-	// t_list		*sprite;
+	t_list		*sprite;
 	t_map		map;
 	t_control	control;
-	t_ray		ray;
 	t_temp		temp;
 	double		*zBuffer;
 }				t_cub;
@@ -228,8 +231,6 @@ int			is_valid_file_name(char *file_path);
 int			is_valid_cub(t_str_arr *conf);
 int			key_press(int key, t_control *control);
 int			key_release(int key, t_control *control);
-void		update_player_rotation(void);
-
-int			main_loop(void);
-void		calc(void);
-void		draw(void);
+void		update_player_rotation(t_player *player, t_map *map);
+int			main_loop(t_cub *cub);
+void		update_screen(t_cub *cub, t_window *window);
