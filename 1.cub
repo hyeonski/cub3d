@@ -1,4 +1,4 @@
-R 150 150
+R 700 700
 NO ./textures/north.xpm
 SO ./textures/south.xpm
 EA ./textures/east.xpm
