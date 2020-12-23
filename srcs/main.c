@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 14:51:47 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/14 22:10:47 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/23 21:50:04 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,104 +19,7 @@
 
 t_cub	g_cub;
 
-/*struct	Sprite
-{
-	double		x;
-	double		y;
-	int			texture;
-};
-
-struct Sprite	sprite[numSprites] =
-{
-	{20.5, 11.5, 10}, //green light in front of playerstart
-	//green lights in every room
-	{18.5,4.5, 10},
-	{10.0,4.5, 10},
-	{10.0,12.5,10},
-	{3.5, 6.5, 10},
-	{3.5, 20.5,10},
-	{3.5, 14.5,10},
-	{14.5,20.5,10},
-
-	//row of pillars in front of wall: fisheye test
-	{18.5, 10.5, 9},
-	{18.5, 11.5, 9},
-	{18.5, 12.5, 9},
-
-	//some barrels around the map
-	{21.5, 1.5, 8},
-	{15.5, 1.5, 8},
-	{16.0, 1.8, 8},
-	{16.2, 1.2, 8},
-	{3.5,  2.5, 8},
-	{9.5, 15.5, 8},
-	{10.0, 15.1,8},
-	{10.5, 15.8,8},
-};
-
-int		spriteOrder[numSprites];
-double	spriteDistance[numSprites];
-
-typedef struct		s_pair
-{
-	double	first;
-	int		second;
-}					t_pair;
-*/
-
 void	key_update(void);
-
-// static int	compare(const void *first, const void *second)
-// {
-// 	if (*(int *)first > *(int *)second)
-// 		return (1);
-// 	else if (*(int *)first < *(int *)second)
-// 		return (-1);
-// 	else
-// 		return (0);
-// }
-
-// void	sort_order(t_pair *orders, int amount)
-// {
-// 	t_pair	tmp;
-
-// 	for (int i = 0; i < amount; i++)
-// 	{
-// 		for (int j = 0; j < amount - 1; j++)
-// 		{
-// 			if (orders[j].first > orders[j + 1].first)
-// 			{
-// 				tmp.first = orders[j].first;
-// 				tmp.second = orders[j].second;
-// 				orders[j].first = orders[j + 1].first;
-// 				orders[j].second = orders[j + 1].second;
-// 				orders[j + 1].first = tmp.first;
-// 				orders[j + 1].second = tmp.second;
-// 			}
-// 		}
-// 	}
-// }
-
-void	sort_sprite(int *order, double *dist, int amount)
-{
-	t_pair	*sprites;
-
-	//std::vector<std::pair<double, int>> sprites(amount);
-	sprites = (t_pair*)malloc(sizeof(t_pair) * amount);
-	for (int i = 0; i < amount; i++)
-	{
-		sprites[i].first = dist[i];
-		sprites[i].second = order[i];
-	}
-	sort_order(sprites, amount);
-	//std::sort(sprites.begin(), sprites.end());
-	for (int i = 0; i < amount; i++)
-	{
-		dist[i] = sprites[amount - i - 1].first;
-		order[i] = sprites[amount - i - 1].second;
-	}
-	free(sprites);
-}
 
 void	update_screen(t_cub *cub, t_window *window)
 {
@@ -136,51 +39,6 @@ void	draw_floor_ceil(t_window *window, t_rgb *floor, t_rgb *ceiling)
 	
 	for(int y = window->height / 2 + 1; y < window->height; ++y)
 	{
-		// // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
-		// float rayDirX0 = g_cub.player.dirX - g_cub.player.planeX;
-		// float rayDirY0 = g_cub.player.dirY - g_cub.player.planeY;
-		// float rayDirX1 = g_cub.player.dirX + g_cub.player.planeX;
-		// float rayDirY1 = g_cub.player.dirY + g_cub.player.planeY;
-		// // Current y position compared to the center of the screen (the horizon)
-		// int p = y - window->height / 2;
-		// // Vertical position of the camera.
-		// float posZ = 0.5 * window->height;
-		// // Horizontal distance from the camera to the floor for the current row.
-		// // 0.5 is the z position exactly in the middle between floor and ceiling.
-		// float rowDistance = posZ / p;
-		// // calculate the real world step vector we have to add for each x (parallel to camera plane)
-		// // adding step by step avoids multiplications with a weight in the inner loop
-		// float floorStepX = rowDistance * (rayDirX1 - rayDirX0) / window->width;
-		// float floorStepY = rowDistance * (rayDirY1 - rayDirY0) / window->width;
-		// // real world coordinates of the leftmost column. This will be updated as we step to the right.
-		// float floorX = g_cub.player.posX + rowDistance * rayDirX0;
-		// float floorY = g_cub.player.posY + rowDistance * rayDirY0;
-		// for(int x = 0; x < window->width; ++x)
-		// {
-		// 	// the cell coord is simply got from the integer parts of floorX and floorY
-		// 	int cellX = (int)(floorX);
-		// 	int cellY = (int)(floorY);
-		// 	// get the texture coordinate from the fractional part
-		// 	int tx = (int)(texWidth * (floorX - cellX)) & (texWidth - 1);
-		// 	int ty = (int)(texHeight * (floorY - cellY)) & (texHeight - 1);
-		// 	floorX += floorStepX;
-		// 	floorY += floorStepY;
-		// 	// choose texture and draw the pixel
-		// 	int checkerBoardPattern = (int)(cellX + cellY) & 1;
-		// 	int floorTexture;
-		// 	if(checkerBoardPattern == 0) floorTexture = 3;
-		// 	else floorTexture = 4;
-		// 	int ceilingTexture = 6;
-		// 	int color;
-		// 	// floor
-		// 	color = g_cub.texture[floorTexture][texWidth * ty + tx];
-		// 	color = (color >> 1) & 8355711; // make a bit darker
-		// 	window->buf[y][x] = color;
-		// 	//ceiling (symmetrical, at height - y - 1 instead of y)
-		// 	color = g_cub.texture[ceilingTexture][texWidth * ty + tx];
-		// 	color = (color >> 1) & 8355711; // make a bit darker
-		// 	window->buf[window->height - y - 1][x] = color;
-		// }
 		for(int x = 0; x < window->width; ++x)
 		{			
 			color = (floor->r << 16) + (floor->g << 8) + floor->b;
@@ -352,76 +210,96 @@ void	draw_wall(t_cub *cub, t_window *window)
 	}
 }
 
-void	draw_sprite(t_cub *cub)
+int		compare(t_sprite *lhs, t_sprite *rhs)
 {
-	//SPRITE CASTING
-	//sort sprites from far to close
-	for(int i = 0; i < numSprites; i++)
+	int lhs_dist;
+	int rhs_dist;
+
+	lhs_dist = pow(lhs->x - g_cub.player.pos_x, 2)
+				+ pow(lhs->y - g_cub.player.pos_y, 2);
+	rhs_dist = pow(rhs->x - g_cub.player.pos_x, 2)
+				+ pow(rhs->y - g_cub.player.pos_y, 2);
+	return (lhs_dist < rhs_dist);
+}
+
+void	calc_draw_sprite_info_sub(t_sprite_info *info)
+{
+	info->draw_start_y = -info->sprite_h / 2 + info->h / 2;
+	if (info->draw_start_y < 0)
+		info->draw_start_y = 0;
+	info->draw_end_y = info->sprite_h / 2 + info->h / 2;
+	if (info->draw_end_y >= info->h)
+		info->draw_end_y = info->h - 1;
+	info->sprite_w = abs((int)(info->h / (info->transform_y)));
+	info->draw_start_x = -info->sprite_w / 2 + info->sprite_screen_x;
+	if(info->draw_start_x < 0)
+		info->draw_start_x = 0;
+	info->draw_end_x = info->sprite_w / 2 + info->sprite_screen_x;
+	if(info->draw_end_x >= info->w)
+		info->draw_end_x = info->w - 1;
+	info->tex_width = g_cub.texture[4].width;
+	info->tex_height = g_cub.texture[4].height;
+}
+
+void	calc_draw_sprite_info(t_sprite_info *info, t_sprite *sprite)
+{
+	info->w = g_cub.window.width;
+	info->h = g_cub.window.height;
+	info->sprite_x = sprite->x - g_cub.player.pos_x;
+	info->sprite_y = sprite->y - g_cub.player.pos_y;
+	info->inv_det = 1.0 / (g_cub.player.plane_x * g_cub.player.dir_y -
+							g_cub.player.dir_x * g_cub.player.plane_y);
+	info->transform_x = info->inv_det * (g_cub.player.dir_y * info->sprite_x
+									- g_cub.player.dir_x * info->sprite_y);
+	info->transform_y = info->inv_det * (-g_cub.player.plane_y * info->sprite_x
+									+ g_cub.player.plane_x * info->sprite_y);
+	info->sprite_screen_x = (int)((info->w / 2)
+								* (1 + info->transform_x / info->transform_y));
+	info->sprite_h = abs((int)(info->h / (info->transform_y)));
+	calc_draw_sprite_info_sub(info);
+}
+
+void	draw_ele_sub(t_sprite_info *info, t_sprite *sprite, int stripe)
+{
+	int y;
+	int tmp;
+
+	y = info->draw_start_y - 1;
+	while (++y < info->draw_end_y)
 	{
-		spriteOrder[i] = i;
-		spriteDistance[i] = ((g_cub.posX - sprite[i].x) * (g_cub.posX - sprite[i].x) + (g_cub.posY - sprite[i].y) * (g_cub.posY - sprite[i].y)); //sqrt not taken, unneeded
-	}
-	sortSprites(spriteOrder, spriteDistance, numSprites);
-	//after sorting the sprites, do the projection and draw them
-	for(int i = 0; i < numSprites; i++)
-	{
-		//translate sprite position to relative to camera
-		double spriteX = sprite[spriteOrder[i]].x - g_cub.posX;
-		double spriteY = sprite[spriteOrder[i]].y - g_cub.posY;
-
-		//transform sprite with the inverse camera matrix
-		// [ planeX   dirX ] -1                                       [ dirY      -dirX ]
-		// [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
-		// [ planeY   dirY ]                                          [ -planeY  planeX ]
-
-		double invDet = 1.0 / (g_cub.planeX * g_cub.dirY - g_cub.player.dirX * g_cub.planeY); //required for correct matrix multiplication
-
-		double transformX = invDet * (g_cub.dirY * spriteX - g_cub.dirX * spriteY);
-		double transformY = invDet * (-g_cub.planeY * spriteX + g_cub.planeX * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
-
-		int spriteScreenX = (int)((width / 2) * (1 + transformX / transformY));
-
-		//parameters for scaling and moving the sprites
-		#define uDiv 1
-		#define vDiv 1
-		#define vMove 0.0
-		int vMoveScreen = (int)(vMove / transformY);
-
-		//calculate height of the sprite on screen
-		int spriteHeight = (int)fabs((height / transformY) / vDiv); //using "transformY" instead of the real distance prevents fisheye
-		//calculate lowest and highest pixel to fill in current stripe
-		int drawStartY = -spriteHeight / 2 + height / 2 + vMoveScreen;
-		if(drawStartY < 0) drawStartY = 0;
-		int drawEndY = spriteHeight / 2 + height / 2 + vMoveScreen;
-		if(drawEndY >= height) drawEndY = height - 1;
-
-		//calculate width of the sprite
-		int spriteWidth = (int)fabs((height / transformY) / uDiv);
-		int drawStartX = -spriteWidth / 2 + spriteScreenX;
-		if(drawStartX < 0) drawStartX = 0;
-		int drawEndX = spriteWidth / 2 + spriteScreenX;
-		if(drawEndX >= width) drawEndX = width - 1;
-
-		//loop through every vertical stripe of the sprite on screen
-		for(int stripe = drawStartX; stripe < drawEndX; stripe++)
-		{
-			int texX = (int)((256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth) / 256);
-			//the conditions in the if are:
-			//1) it's in front of camera plane so you don't see things behind you
-			//2) it's on the screen (left)
-			//3) it's on the screen (right)
-			//4) ZBuffer, with perpendicular distance
-			if(transformY > 0 && stripe > 0 && stripe < width && transformY < g_cub.zBuffer[stripe])
-			for(int y = drawStartY; y < drawEndY; y++) //for every pixel of the current stripe
-			{
-				int d = (y-vMoveScreen) * 256 - height * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
-				int texY = ((d * texHeight) / spriteHeight) / 256;
-				int color = g_cub.texture[sprite[spriteOrder[i]].texture][texWidth * texY + texX]; //get current color from the texture
-				if((color & 0x00FFFFFF) != 0) g_cub.window.buf[y][stripe] = color; //paint pixel if it isn't black, black is the invisible color
-			}
-		}
+		info->d = (y) * 256 - info->h * 128 + info->sprite_h * 128;
+		info->tex_y = (info->d * info->tex_height) / info->sprite_h / 256;
+		tmp = info->tex_width * info->tex_y + info->tex_x;
+		info->color = g_cub.texture[sprite->tex_num].data[tmp];
+		if ((info->color & 0x00FFFFFF) != 0)
+			g_cub.window.buf[y][stripe] = info->color;
 	}
 }
+
+void	draw_ele(t_sprite *sprite)
+{
+	t_sprite_info	info;
+	int					stripe;
+	int					temp;
+
+	calc_draw_sprite_info(&info, sprite);
+	stripe = info.draw_start_x - 1;
+	while (++stripe < info.draw_end_x)
+	{
+		temp = stripe - (-info.sprite_w / 2 + info.sprite_screen_x);
+		info.tex_x = (int)(256 * temp * info.tex_width / info.sprite_w) / 256;
+		if (stripe > 0 && stripe < info.w && info.transform_y > 0
+			&& info.transform_y < g_cub.zBuffer[stripe])
+			draw_ele_sub(&info, sprite, stripe);
+	}
+}
+
+void	draw_sprite(t_cub *cub)
+{
+	ft_lstsort(&cub->sprite, compare);
+	ft_lstforeach(cub->sprite, draw_ele);
+}
+
 
 int	main_loop(t_cub *cub)
 {
@@ -477,7 +355,7 @@ void		init_game(t_cub *cub)
 	int		temp;
 
 	cub->player.move_speed = 0.05;
-	cub->player.rot_speed = 0.02;
+	cub->player.rot_speed = 0.025;
 	
 	cub->win = mlx_new_window(cub->mlx, cub->window.width, cub->window.height, "mlx");
 

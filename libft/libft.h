@@ -73,5 +73,8 @@ void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 void (*del)(void *));
 void				ft_lstpush_back(t_list **begin_list, void *data);
+void				ft_lstsort(t_list **begin_list, int (*cmp)());
+void				ft_lstforeach(t_list *begin_list, void (*f)());
+t_list				*ft_create_elem(void *data);
 
 #endif

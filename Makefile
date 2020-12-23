@@ -25,6 +25,11 @@ SRCS = ./libft/ft_memset.c \
 	   ./libft/ft_putchar_fd.c \
 	   ./libft/ft_putstr_fd.c \
 	   ./libft/ft_putendl_fd.c \
+	   ./libft/ft_lstsort.c \
+	   ./libft/ft_lstforeach.c \
+	   ./libft/ft_lstpush_back.c \
+	   ./libft/ft_create_elem.c \
+	   ./libft/ft_lstlast.c \
 	   ./get_next_line/get_next_line.c \
 	   ./srcs/parse_value.c \
 	   ./srcs/set_map.c \
@@ -35,6 +40,7 @@ SRCS = ./libft/ft_memset.c \
 	   ./srcs/validation.c \
 	   ./srcs/key_handle.c \
 	   ./srcs/main.c
+
 
 OBJS = $(SRCS:.c=.o)
 

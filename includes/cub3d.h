@@ -180,13 +180,34 @@ typedef struct	s_tex_info
 	double	tex_pos;
 }				t_tex_info;
 
-typedef struct		s_sprite
-{
+typedef struct	s_sprite_info{
+	int				w;
+	int				h;
+	double			sprite_x;
+	double			sprite_y;
+	double			inv_det;
+	double			transform_x;
+	double			transform_y;
+	int				sprite_screen_x;
+	int				sprite_h;
+	int				draw_start_y;
+	int				draw_end_y;
+	int				sprite_w;
+	int				draw_start_x;
+	int				draw_end_x;
+	int				tex_width;
+	int				tex_height;
+	int				tex_x;
+	int				tex_y;
+	int				d;
+	unsigned int	color;
+}				t_sprite_info;
+
+typedef struct	s_sprite {
 	double			x;
 	double			y;
-	double			dist;
-	struct s_sprite	*next;
-}					t_sprite;
+	int				tex_num;
+}				t_sprite;
 
 typedef struct	s_cub
 {

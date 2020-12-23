@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/24 12:43:43 by gicho             #+#    #+#             */
-/*   Updated: 2020/12/14 22:03:59 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/23 11:51:59 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,6 @@ typedef struct	s_texture {
 	int			*data;
 }				t_texture;
 
-typedef struct	s_sprite {
-	t_pair_double	pos;
-	int				tex_num;
-}				t_sprite;
 
 typedef struct	s_cub {
 	t_window	window;

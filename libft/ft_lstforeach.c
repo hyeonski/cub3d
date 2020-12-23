@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_create_elem.c                                   :+:      :+:    :+:   */
+/*   ft_lstforeach.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/08 01:18:02 by gicho             #+#    #+#             */
-/*   Updated: 2020/12/23 21:24:26 by hyeonski         ###   ########.fr       */
+/*   Created: 2020/12/23 21:15:47 by hyeonski          #+#    #+#             */
+/*   Updated: 2020/12/23 21:16:04 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_list.h"
+#include "libft.h"
 
-t_list	*ft_create_elem(void *data)
+void	ft_lstforeach(t_list *begin_list, void (*f)())
 {
-	t_list *ret;
-
-	ret = (t_list*)malloc(sizeof(t_list));
-	ret->data = data;
-	ret->next = 0;
-	return (ret);
+	while (begin_list)
+	{
+		f(begin_list->content);
+		begin_list = begin_list->next;
+	}
 }

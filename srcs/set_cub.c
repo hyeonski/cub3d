@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 12:22:17 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/16 00:05:14 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/23 21:30:39 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int		read_file_to_buf(char *map_file_path, t_str_arr *conf)
 	return (0);
 }
 
-int	init_sprite(t_list **head, t_map *map)
+int	init_sprite(t_list **begin_list, t_map *map)
 {
 	int			i;
 	int			j;
@@ -54,7 +54,8 @@ int	init_sprite(t_list **head, t_map *map)
 				sprite = malloc(sizeof(t_sprite));
 				sprite->x = 0.5 + i;
 				sprite->y = 0.5 + j;
-				ft_lstpush_back(head, (void*)sprite);
+				sprite->tex_num = 4;	
+				ft_lstpush_back(begin_list, (void*)sprite);
 			}
 			j++;
 		}
