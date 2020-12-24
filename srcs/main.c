@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 14:51:47 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/23 21:50:04 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/24 11:26:29 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,7 +357,7 @@ void		init_game(t_cub *cub)
 	cub->player.move_speed = 0.05;
 	cub->player.rot_speed = 0.025;
 	
-	cub->win = mlx_new_window(cub->mlx, cub->window.width, cub->window.height, "mlx");
+	cub->win = mlx_new_window(cub->mlx, cub->window.width, cub->window.height, "Merry Christmas");
 
 	cub->imgptr = mlx_new_image(cub->mlx, cub->window.width, cub->window.height);
 	cub->data = (int *)mlx_get_data_addr(cub->imgptr, &temp, &temp, &temp);

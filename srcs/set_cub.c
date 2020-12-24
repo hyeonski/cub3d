@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 12:22:17 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/23 21:30:39 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/24 17:34:30 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int		read_file_to_buf(char *map_file_path, t_str_arr *conf)
 	while ((ret = get_next_line(fd, &temp)) != 0)
 	{
 		if (ret == -1)
-			return (print_error("error_msg"));
+			return (print_error("config file init error"));
 		if (ft_list_strjoin(conf, temp) == 0)
 			return (print_error(strerror(errno)));
 		free(temp);
