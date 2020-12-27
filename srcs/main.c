@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 14:51:47 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/24 11:26:29 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/27 15:44:45 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,7 +355,7 @@ void		init_game(t_cub *cub)
 	int		temp;
 
 	cub->player.move_speed = 0.05;
-	cub->player.rot_speed = 0.025;
+	cub->player.rot_speed = 0.03;
 	
 	cub->win = mlx_new_window(cub->mlx, cub->window.width, cub->window.height, "Merry Christmas");
 
@@ -378,6 +378,7 @@ int		main(int ac, char **av)
 	// 	return (print_error(cuberror(invalid_argument)));
 	if (!set_cub(av[1]))
 		return (-1);
+	
 	// if (argc == 3)
 	// {
 	// 	update_scene();

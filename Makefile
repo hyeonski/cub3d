@@ -1,7 +1,7 @@
 TARGET = cub3d
 INCLUDES = -I ./includes
 CFLAGS = -g3 -fsanitize=address -Wall -Wextra -Werror
-LFLAGS = -L /usr/local/lib
+LFLAGS = -L ./mlx
 LIBS = -lmlx -framework OpenGL -framework AppKit
 CC = gcc
 RM = rm -f

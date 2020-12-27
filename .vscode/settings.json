@@ -9,6 +9,13 @@
 		"bitset": "c",
 		"locale": "c",
 		"cmath": "c",
-		"complex": "c"
+		"complex": "c",
+		"__hash_table": "c",
+		"__split_buffer": "c",
+		"initializer_list": "c",
+		"iterator": "c",
+		"unordered_map": "c",
+		"utility": "c",
+		"ratio": "c"
 	}
 }

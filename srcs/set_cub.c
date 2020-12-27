@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 12:22:17 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/24 17:34:30 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/27 15:41:31 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int		init_cub(t_str_arr *conf)
 	while (i++ < conf->size && !is_contain(conf->elem[i][0], " 01"))
 	{
 		if (ft_strlen(conf->elem[i]) == 0)
-			continue;
+			continue ;
 		if (parse_value(conf->elem[i]) == 0)
 			return (0);
 	}
@@ -108,4 +108,4 @@ int		set_cub(char *map_file_path)
 	}
 	free_2d_arr(conf.elem, conf.size);
 	return (1);
-}
+} 

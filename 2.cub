@@ -1,0 +1,14 @@
+R 10000 480
+NO /Users/hyeonseungkim/cub3d/textures/north.xpm
+SO /Users/hyeonseungkim/cub3d/textures/south.xpm
+EA /Users/hyeonseungkim/cub3d/textures/east.xpm
+
+S /Users/hyeonseungkim/cub3d/textures/mossy.xpm
+F 0,0,139
+
+WE /Users/hyeonseungkim/cub3d/textures/west.xpm
+C 124,252,0
+11111
+10S01
+10001
+11111
