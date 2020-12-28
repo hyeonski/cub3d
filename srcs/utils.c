@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 12:52:33 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/27 15:41:56 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/28 19:44:02 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,23 +33,7 @@ int		ft_list_strjoin(t_str_arr *str_arr, char *str)
 	return (1);
 }
 
-char	**init_chars_array(int row, int col, char c)
-{
-	char	**ret;
-	int		i;
-
-	ret = (char **)malloc(sizeof(char *) * row);
-	i = 0;
-	while (i < row)
-	{
-		ret[i] = (char *)malloc(sizeof(char) * col);
-		ft_memset(ret[i], c, col);
-		++i;
-	}
-	return (ret);
-}
-
-int			is_contain(char c, char *str)
+int		is_contain(char c, char *str)
 {
 	while (*str)
 		if (c == *str++)
@@ -57,22 +41,27 @@ int			is_contain(char c, char *str)
 	return (0);
 }
 
-int		ft_2d_arr_size(char **arr)
+int		is_num_str(const char *str)
 {
-	int i;
-
-	i = 0;
-	while (arr[i])
-		++i;
-	return (i);
+	while (*str)
+	{
+		if (*str < '0' || *str > '9')
+			return (0);
+		str++;
+	}
+	return (1);
 }
 
-void	free_2d_arr(char **arr, int size)
+int		count_chars(const char *s, int c)
 {
-	int i;
+	int cnt;
 
-	i = 0;
-	while (i < size)
-		free(arr[i++]);
-	free(arr);
+	cnt = 0;
+	while (*s)
+	{
+		if (*s == c)
+			++cnt;
+		++s;
+	}
+	return (cnt);
 }

@@ -6,13 +6,13 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 16:53:12 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/13 20:58:12 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/28 18:48:10 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-void		set_player(t_player *player, int x, int y, char dir)
+void	set_player(t_player *player, int x, int y, char dir)
 {
 	player->pos_x = 0.5 + y;
 	player->pos_y = 0.5 + x;
@@ -40,8 +40,8 @@ void		set_player(t_player *player, int x, int y, char dir)
 
 void	init_player(t_map *map, t_player *player)
 {
-	int			i;
-	int			j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (i < map->height)

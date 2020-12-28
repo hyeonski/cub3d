@@ -1,10 +1,10 @@
 R 800 400
 
-NO ./texture/wall_1.xpm
-SO ./texture/wall_2.xpm
-WE ./texture/wall_3.xpm
-EA ./texture/wall_4.xpm
-S ./texture/sprite_1.xpm
+NO ./textures/north.xpm
+SO ./textures/south.xpm
+WE ./textures/west.xpm
+EA ./textures/east.xpm
+S ./textures/barrel.xpm
 
 F 40,12,0
 C 29,145,246

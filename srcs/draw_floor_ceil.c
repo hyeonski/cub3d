@@ -1,20 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   draw_floor_ceil.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/13 14:48:59 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/28 18:02:39 by hyeonski         ###   ########.fr       */
+/*   Created: 2020/12/28 17:49:09 by hyeonski          #+#    #+#             */
+/*   Updated: 2020/12/28 18:29:19 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-int		print_error(char *message)
+void	draw_floor_ceil(t_window *window, t_rgb *floor, t_rgb *ceiling)
 {
-	ft_putstr_fd("Error: ", 2);
-	ft_putendl_fd(message, 2);
-	return (-1);
+	int	color;
+	int	x;
+	int	y;
+
+	y = window->height / 2 + 1;
+	while (y < window->height)
+	{
+		x = 0;
+		while (x < window->width)
+		{
+			color = (floor->r << 16) + (floor->g << 8) + floor->b;
+			window->buf[y][x] = color;
+			color = (ceiling->r << 16) + (ceiling->g << 8) + ceiling->b;
+			window->buf[window->height - y - 1][x] = color;
+			x++;
+		}
+		y++;
+	}
 }

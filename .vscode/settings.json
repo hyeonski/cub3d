@@ -16,6 +16,7 @@
 		"iterator": "c",
 		"unordered_map": "c",
 		"utility": "c",
-		"ratio": "c"
+		"ratio": "c",
+		"sstream": "c"
 	}
 }

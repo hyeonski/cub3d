@@ -6,18 +6,18 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 12:22:17 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/27 15:41:31 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/28 18:46:52 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-int		read_file_to_buf(char *map_file_path, t_str_arr *conf)
+int				read_file_to_buf(char *map_file_path, t_str_arr *conf)
 {
-	int		fd;
-	int		ret;
-	char	*temp;
-	
+	int			fd;
+	int			ret;
+	char		*temp;
+
 	if (!is_valid_file_name(map_file_path))
 		return (print_error("invalid file name"));
 	else if ((fd = open(map_file_path, O_RDONLY)) == -1)
@@ -37,7 +37,7 @@ int		read_file_to_buf(char *map_file_path, t_str_arr *conf)
 	return (0);
 }
 
-int	init_sprite(t_list **begin_list, t_map *map)
+int				init_sprite(t_list **begin_list, t_map *map)
 {
 	int			i;
 	int			j;
@@ -54,7 +54,7 @@ int	init_sprite(t_list **begin_list, t_map *map)
 				sprite = malloc(sizeof(t_sprite));
 				sprite->x = 0.5 + i;
 				sprite->y = 0.5 + j;
-				sprite->tex_num = 4;	
+				sprite->tex_num = 4;
 				ft_lstpush_back(begin_list, (void*)sprite);
 			}
 			j++;
@@ -64,11 +64,11 @@ int	init_sprite(t_list **begin_list, t_map *map)
 	return (1);
 }
 
-int		init_cub(t_str_arr *conf)
+int				init_cub(t_str_arr *conf)
 {
 	int			i;
-	
-	i =	-1;
+
+	i = -1;
 	while (i++ < conf->size && !is_contain(conf->elem[i][0], " 01"))
 	{
 		if (ft_strlen(conf->elem[i]) == 0)
@@ -80,18 +80,17 @@ int		init_cub(t_str_arr *conf)
 	set_map(conf->elem, i);
 	init_player(&g_cub.map, &g_cub.player);
 	init_sprite(&g_cub.sprite, &g_cub.map);
-	g_cub.zBuffer = malloc(sizeof(double) * g_cub.window.width);
+	g_cub.z_buffer = malloc(sizeof(double) * g_cub.window.width);
 	return (1);
 }
 
-
-int		set_cub(char *map_file_path)
+int				set_cub(char *map_file_path)
 {
 	t_str_arr	conf;
 
 	ft_bzero(&conf, sizeof(conf));
 	if (read_file_to_buf(map_file_path, &conf) == -1)
-	{	
+	{
 		free_2d_arr(conf.elem, conf.size);
 		return (0);
 	}
@@ -108,4 +107,4 @@ int		set_cub(char *map_file_path)
 	}
 	free_2d_arr(conf.elem, conf.size);
 	return (1);
-} 
+}

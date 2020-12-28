@@ -38,7 +38,18 @@ SRCS = ./libft/ft_memset.c \
 	   ./srcs/error.c \
 	   ./srcs/utils.c \
 	   ./srcs/validation.c \
+	   ./srcs/valid_map.c \
+	   ./srcs/bmp.c \
 	   ./srcs/key_handle.c \
+	   ./srcs/player_move.c \
+	   ./srcs/dda.c \
+	   ./srcs/draw_floor_ceil.c \
+	   ./srcs/draw_sprite_utils.c \
+	   ./srcs/draw_sprite.c \
+	   ./srcs/draw_wall.c \
+	   ./srcs/valid_key.c \
+	   ./srcs/valid_map_utils.c \
+	   ./srcs/arr_utils.c \
 	   ./srcs/main.c
 
 SRCS_B = ./libft/ft_memset.c \

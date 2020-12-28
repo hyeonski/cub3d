@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 16:53:09 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/27 14:48:34 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/28 18:47:20 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ void		set_map(char **strs, int start)
 	g_cub.map.data = data;
 }
 
-void	check_map_size(t_str_arr *arr, int i)
+void		check_map_size(t_str_arr *arr, int i)
 {
-	int			ret_width;
-	int			ret_height;
-	int			len;
+	int		ret_width;
+	int		ret_height;
+	int		len;
 
 	ret_width = 0;
 	ret_height = 0;

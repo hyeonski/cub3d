@@ -1,101 +1,117 @@
-#include <fcntl.h>
-#include <stdlib.h>
-#include "key_macos.h"
-#include <math.h>
-#include <string.h>
-#include <stdio.h>
-#include <mlx.h>
-#include <unistd.h>
-#include <limits.h>
-#include <errno.h>
-#include "get_next_line.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/12/28 18:13:46 by hyeonski          #+#    #+#             */
+/*   Updated: 2020/12/28 18:17:38 by hyeonski         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-typedef struct	s_player
+#ifndef CUB3D_H
+# define CUB3D_H
+
+# include <fcntl.h>
+# include <stdlib.h>
+# include <math.h>
+# include <string.h>
+# include <stdio.h>
+# include <mlx.h>
+# include <unistd.h>
+# include <limits.h>
+# include <errno.h>
+# include "get_next_line.h"
+# include "key_macos.h"
+
+typedef struct		s_player
 {
-	double	pos_x;
-	double	pos_y;
-	double 	dir_x;
-	double 	dir_y;
-	double	plane_x;
-	double	plane_y;
-	double	move_speed;
-	double	rot_speed;
-}				t_player;
+	double			pos_x;
+	double			pos_y;
+	double			dir_x;
+	double			dir_y;
+	double			plane_x;
+	double			plane_y;
+	double			move_speed;
+	double			rot_speed;
+}					t_player;
 
-typedef struct	s_window
+typedef struct		s_window
 {
-	int 	width;
-	int 	height;
-	int		**buf;
-}				t_window;
+	int				width;
+	int				height;
+	int				**buf;
+}					t_window;
 
-typedef struct	s_texture
+typedef struct		s_texture
 {
-	int			width;
-	int			height;
-	int			*data;
-}				t_texture;
+	int				width;
+	int				height;
+	int				*data;
+}					t_texture;
 
-typedef struct	s_rgb
+typedef struct		s_rgb
 {
-	int r;
-	int g;
-	int b;
-}				t_rgb;
+	int				r;
+	int				g;
+	int				b;
+}					t_rgb;
 
-typedef struct	s_map
+typedef struct		s_map
 {
-	int			width;
-	int			height;
-	char		**data;
-}				t_map;
+	int				width;
+	int				height;
+	char			**data;
+}					t_map;
 
-typedef struct	s_control
+typedef struct		s_control
 {
-	int			keyboard[101];
-}				t_control;
+	int				keyboard[127];
+}					t_control;
 
-typedef struct	s_str_arr {
-	int		size;
-	char	**elem;
-}				t_str_arr;
-
-typedef struct	s_ray
+typedef struct		s_str_arr
 {
-	double raydir_x;
-	double raydir_y;
-	int map_x;
-	int map_y;
-	double side_dist_x;
-	double side_dist_y;
-	double delta_dist_x;
-	double delta_dist_y;
-	int step_x;
-	int step_y;
-	int	side;
-}				t_ray;
+	int				size;
+	char			**elem;
+}					t_str_arr;
 
-typedef struct	s_draw_info
+typedef struct		s_ray
 {
-	t_ray	ray;
-	double	perp_wall_dist;
-	int		line_height;
-	int		draw_start;
-	int		draw_end;
-}				t_draw_info;
+	double			raydir_x;
+	double			raydir_y;
+	int				map_x;
+	int				map_y;
+	double			side_dist_x;
+	double			side_dist_y;
+	double			delta_dist_x;
+	double			delta_dist_y;
+	int				step_x;
+	int				step_y;
+	int				side;
+}					t_ray;
 
-typedef struct	s_tex_info
+typedef struct		s_draw_info
 {
-	int		tex_num;
-	int		tex_width;
-	int		tex_height;
-	double	wall_x;
-	int		tex_x;
-	double	step;
-	double	tex_pos;
-}				t_tex_info;
+	t_ray			ray;
+	double			perp_wall_dist;
+	int				line_height;
+	int				draw_start;
+	int				draw_end;
+}					t_draw_info;
 
-typedef struct	s_sprite_info{
+typedef struct		s_tex_info
+{
+	int				tex_num;
+	int				tex_width;
+	int				tex_height;
+	double			wall_x;
+	int				tex_x;
+	double			step;
+	double			tex_pos;
+}					t_tex_info;
+
+typedef struct		s_sprite_info{
 	int				w;
 	int				h;
 	double			sprite_x;
@@ -116,62 +132,162 @@ typedef struct	s_sprite_info{
 	int				tex_y;
 	int				d;
 	unsigned int	color;
-}				t_sprite_info;
+}					t_sprite_info;
 
-typedef struct	s_sprite {
+typedef struct		s_sprite
+{
 	double			x;
 	double			y;
 	int				tex_num;
-}				t_sprite;
+}					t_sprite;
 
-typedef struct	s_cub
+typedef struct		s_cub
 {
-	void		*mlx;
-	void		*win;
+	void			*mlx;
+	void			*win;
+	void			*imgptr;
+	int				*data;
+	t_window		window;
+	t_player		player;
+	t_texture		texture[5];
+	t_rgb			floor;
+	t_rgb			ceiling;
+	t_list			*sprite;
+	t_map			map;
+	t_control		control;
+	double			*z_buffer;
+}					t_cub;
 
-	void		*imgptr;
-	int			*data;
-	t_window	window;
-	t_player	player;
-	t_texture	texture[5];
-	t_rgb		floor;
-	t_rgb		ceiling;
-	t_list		*sprite;
-	t_map		map;
-	t_control	control;
-	double		*zBuffer;
-}				t_cub;
+extern t_cub		g_cub;
+/*
+** Src is : ../srcs/set_cub.c
+*/
+int					read_file_to_buf(char *map_file_path, t_str_arr *conf);
+int					init_sprite(t_list **begin_list, t_map *map);
+int					init_cub(t_str_arr *conf);
+int					set_cub(char *map_file_path);
 
-typedef struct s_pair_int
-{
-	int x;
-	int y;
-}				t_pair_int;
+/*
+** Src is : ../srcs/valid_key.c
+*/
+int					check_key(char *key, int *check_list);
+int					is_valid_rgb(char *rgb);
+int					check_rfc(char **token, int size);
+int					is_valid_key(char *key, int *check_list);
 
-extern t_cub g_cub;
+/*
+** Src is : ../srcs/validation.c
+*/
+int					is_valid_file_name(char *file_path);
+int					is_check_list_completed(int *check_list);
+int					is_valid_cub(t_str_arr *conf);
 
-int			set_cub(char *map_file_path);
-int			init_cub(t_str_arr *conf);
-int			read_file_to_buf(char *map_file_path, t_str_arr *conf);
-int			parse_value(char *key);
-t_rgb		set_rgbcolor(char *value);
-void		set_window(int width, int height);
-int			set_texture(char *key, char *file_path);
-int			load_texture(t_texture *texture, char *file_path);
-void		check_map_size(t_str_arr *arr, int i);
-void		set_map(char **strs, int start);
-void		init_player(t_map *map, t_player *player);
-void		set_player(t_player *player, int x, int y, char dir);
-void		free_2d_arr(char **arr, int size);
-int			ft_2d_arr_size(char **arr);
-int			is_contain(char c, char *str);
-char		**init_chars_array(int row, int col, char c);
-int			ft_list_strjoin(t_str_arr *str_arr, char *str);
-int			print_error(char *message);
-int			is_valid_file_name(char *file_path);
-int			is_valid_cub(t_str_arr *conf);
-int			key_press(int key, t_control *control);
-int			key_release(int key, t_control *control);
-void		update_player_rotation(t_player *player, t_map *map);
-int			main_loop(t_cub *cub);
-void		update_screen(t_cub *cub, t_window *window);
+/*
+** Src is : ../srcs/dda.c
+*/
+void				init_ray(int x, int w, t_ray *ray, t_player *player);
+void				calc_delta_dist(t_ray *ray);
+void				calc_step_side_dist(t_ray *ray, t_player *player);
+void				dda(t_ray *ray);
+void				calc_perp_wall_dist(t_draw_info *draw_info, t_ray *ray, t_player *player);
+
+/*
+** Src is : ../srcs/set_map.c
+*/
+void				set_map(char **strs, int start);
+void				check_map_size(t_str_arr *arr, int i);
+
+/*
+** Src is : ../srcs/player_move.c
+*/
+void				move_player_front_back(char **map, t_player *player, double move_speed);
+void				move_player_left_right(char **map, t_player *player, double move_speed);
+void				rotate_player(t_player *player, double rotate_speed);
+void				update_player_rotation(t_player *player, t_map *map);
+
+/*
+** Src is : ../srcs/valid_map.c
+*/
+int					is_contain_only_map_arg(char **map, int width, int height);
+int					dfs(char ***map, int i, int j);
+int					is_valid_map_structure(char **map, int width, int height);
+int					is_valid_map(t_str_arr *conf, int *i, int *check_list, t_map *map);
+
+/*
+** Src is : ../srcs/draw_sprite.c
+*/
+void				calc_draw_sprite_info(t_sprite_info *info, t_sprite *sprite);
+void				calc_draw_sprite_info_sub(t_sprite_info *info);
+void				draw_ele(t_sprite *sprite);
+void				draw_ele_sub(t_sprite_info *info, t_sprite *sprite, int stripe);
+void				draw_sprite(t_cub *cub);
+
+/*
+** Src is : ../srcs/utils.c
+*/
+int					ft_list_strjoin(t_str_arr *str_arr, char *str);
+char				**init_chars_array(int row, int col, char c);
+int					is_contain(char c, char *str);
+int					ft_2d_arr_size(char **arr);
+void				free_2d_arr(char **arr, int size);
+int					is_num_str(const char *str);
+int					count_chars(const char *s, int c);
+
+/*
+** Src is : ../srcs/error.c
+*/
+int					print_error(char *message);
+
+/*
+** Src is : ../srcs/set_player.c
+*/
+void				set_player(t_player *player, int x, int y, char dir);
+void				init_player(t_map *map, t_player *player);
+
+/*
+** Src is : ../srcs/bmp.c
+*/
+int					save_image_to_bmp_file();
+
+/*
+** Src is : ../srcs/valid_map_utils.c
+*/
+int					is_map_arg(int c);
+int					get_next_dir_x(int x, int dir);
+int					get_next_dir_y(int y, int dir);
+
+/*
+** Src is : ../srcs/draw_wall.c
+*/
+void				get_draw_info(int x, t_draw_info *draw_info, t_window *window);
+void				select_texture(t_tex_info *tex_info, t_player *player, t_draw_info *draw_info);
+void				get_tex_info(t_tex_info *tex_info, t_draw_info *draw_info, t_ray *ray);
+int					get_tex_pixel(t_tex_info *tex_info, t_draw_info *draw_info);
+void				draw_wall(t_cub *cub, t_window *window);
+
+/*
+** Src is : ../srcs/key_handle.c
+*/
+int					key_press(int key, t_control *control);
+int					key_release(int key, t_control *control);
+
+/*
+** Src is : ../srcs/draw_floor_ceil.c
+*/
+void				draw_floor_ceil(t_window *window, t_rgb *floor, t_rgb *ceiling);
+
+/*
+** Src is : ../srcs/parse_value.c
+*/
+int					load_texture(t_texture *texture, char *file_path);
+int					set_texture(char *key, char *file_path);
+void				set_window(int width, int height);
+t_rgb				set_rgbcolor(char *value);
+int					parse_value(char *key);
+
+/*
+** Src is : ../srcs/draw_sprite_utils.c
+*/
+int					compare_sprite_dist(t_sprite *lhs, t_sprite *rhs);
+
+#endif

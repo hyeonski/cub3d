@@ -6,27 +6,28 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 12:38:22 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/13 16:09:33 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/28 18:42:57 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-int		load_texture(t_texture *texture, char *file_path)
+int				load_texture(t_texture *texture, char *file_path)
 {
-	int		tmp;
-	void	*imgptr;
+	int			tmp;
+	void		*imgptr;
 
-	imgptr = mlx_xpm_file_to_image(g_cub.mlx, file_path, &texture->width, &texture->height);
+	imgptr = mlx_xpm_file_to_image(g_cub.mlx, file_path,
+			&texture->width, &texture->height);
 	if (!imgptr)
 		return (0);
 	texture->data = (int *)mlx_get_data_addr(imgptr, &tmp, &tmp, &tmp);
 	return (texture->data != 0);
 }
 
-int		set_texture(char *key, char *file_path)
+int				set_texture(char *key, char *file_path)
 {
-	int ret;
+	int			ret;
 
 	if (ft_strcmp(key, "EA") == 0)
 		ret = load_texture(&g_cub.texture[0], file_path);
@@ -43,11 +44,11 @@ int		set_texture(char *key, char *file_path)
 	return (ret);
 }
 
-void	set_window(int width, int height)
+void			set_window(int width, int height)
 {
 	t_window	window;
 	int			i;
-	
+
 	width = (width > 1000 ? 1000 : width);
 	width = (width < 100 ? 100 : width);
 	if (width * 3 != height * 4)
@@ -61,10 +62,10 @@ void	set_window(int width, int height)
 	g_cub.window = window;
 }
 
-t_rgb	set_rgbcolor(char *value)
+t_rgb			set_rgbcolor(char *value)
 {
-	t_rgb	color;
-	char	**res;
+	t_rgb		color;
+	char		**res;
 
 	res = ft_split(value, ',');
 	color.r = ft_atoi(res[0]);
@@ -74,10 +75,10 @@ t_rgb	set_rgbcolor(char *value)
 	return (color);
 }
 
-int		parse_value(char *key)
+int				parse_value(char *key)
 {
-	char	**res;
-	int		size;
+	char		**res;
+	int			size;
 
 	res = ft_split(key, ' ');
 	size = ft_2d_arr_size(res);
@@ -88,7 +89,7 @@ int		parse_value(char *key)
 		else if (res[0][0] == 'F')
 			g_cub.floor = set_rgbcolor(res[1]);
 		else
-			g_cub.ceiling =set_rgbcolor(res[1]);
+			g_cub.ceiling = set_rgbcolor(res[1]);
 	}
 	else if (!set_texture(res[0], res[1]))
 		return (0);
