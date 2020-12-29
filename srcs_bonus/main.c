@@ -6,11 +6,11 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 14:51:47 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/29 20:57:04 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/29 21:00:12 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "../includes/cub3d_bonus.h"
 
 t_cub		g_cub;
 
@@ -28,7 +28,7 @@ void		update_screen(t_cub *cub, t_window *window)
 
 int			main_loop(t_cub *cub)
 {
-	draw_floor_ceil(&cub->window, &cub->floor, &cub->ceiling);
+	draw_floor_ceil(&cub->window, &cub->player);
 	draw_wall(cub, &cub->window);
 	draw_sprite(cub);
 	update_screen(cub, &cub->window);
@@ -64,7 +64,7 @@ int			main(int ac, char **av)
 		return (-1);
 	if (ac == 3 && ft_strcmp("--save", av[2]) == 0)
 	{
-		draw_floor_ceil(&g_cub.window, &g_cub.floor, &g_cub.ceiling);
+		draw_floor_ceil(&g_cub.window, &g_cub.player);
 		draw_wall(&g_cub, &g_cub.window);
 		draw_sprite(&g_cub);
 		if ((save_image_to_bmp_file(g_cub.window.buf,

@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   cub3d_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/29 18:18:08 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/29 21:00:18 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/29 20:55:08 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
+#ifndef CUB3D_BONUS_H
+# define CUB3D_BONUS_H
 
 # include <fcntl.h>
 # include <stdlib.h>
@@ -111,6 +111,25 @@ typedef struct		s_tex_info
 	double			tex_pos;
 }					t_tex_info;
 
+typedef struct		s_floor_info
+{
+	double			raydir_x0;
+	double			raydir_y0;
+	double			raydir_x1;
+	double			raydir_y1;
+	int				p;
+	double			pos_z;
+	double			row_dist;
+	double			floor_step_x;
+	double			floor_step_y;
+	double			floor_x;
+	double			floor_y;
+	int				cell_x;
+	int				cell_y;
+	int				tx;
+	int				ty;
+}					t_floor_info;
+
 typedef struct		s_sprite_info{
 	int				w;
 	int				h;
@@ -149,7 +168,7 @@ typedef struct		s_cub
 	int				*data;
 	t_window		window;
 	t_player		player;
-	t_texture		texture[5];
+	t_texture		texture[7];
 	t_rgb			floor;
 	t_rgb			ceiling;
 	t_list			*sprite;
@@ -292,8 +311,10 @@ int					key_release(int key, t_control *control);
 /*
 ** Src is : ../srcs/draw_floor_ceil.c
 */
-void				draw_floor_ceil(t_window *window,
-		t_rgb *floor, t_rgb *ceiling);
+void				draw_floor_ceil(t_window *window, t_player *player);
+void				get_floor_info(t_floor_info *info,
+		t_window *window, t_player *player, int y);
+void				get_floor_tex(t_floor_info *info, t_window *window, int y);
 
 /*
 ** Src is : ../srcs/parse_value.c

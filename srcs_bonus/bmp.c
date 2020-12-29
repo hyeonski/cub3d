@@ -6,11 +6,11 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/28 14:22:54 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/29 19:55:26 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/29 20:00:50 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "../includes/cub3d_bonus.h"
 
 void					set_int_in_char(unsigned char *start, int value)
 {

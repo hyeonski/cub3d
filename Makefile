@@ -1,4 +1,17 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2020/12/29 21:04:13 by hyeonski          #+#    #+#              #
+#    Updated: 2020/12/29 21:04:15 by hyeonski         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 TARGET = cub3d
+TARGET_B = cub3d_bonus
 INCLUDES = -I ./includes
 CFLAGS = -g3 -fsanitize=address -Wall -Wextra -Werror
 LFLAGS = -L ./mlx
@@ -77,16 +90,26 @@ SRCS_B = ./libft/ft_memset.c \
 		 ./libft/ft_create_elem.c \
 		 ./libft/ft_lstlast.c \
 		 ./get_next_line/get_next_line.c \
-		 ./srcs/parse_value.c \
-		 ./srcs/set_map.c \
-		 ./srcs/set_player.c \
-		 ./srcs/set_cub.c \
-		 ./srcs/error.c \
-		 ./srcs/utils.c \
-		 ./srcs/validation.c \
-		 ./srcs/key_handle.c \
-		 ./srcs/main.c \
-		 ./srcs/draw_bonus.c
+		 ./srcs_bonus/parse_value.c \
+		 ./srcs_bonus/set_map.c \
+		 ./srcs_bonus/set_player.c \
+		 ./srcs_bonus/set_cub.c \
+		 ./srcs_bonus/error.c \
+		 ./srcs_bonus/utils.c \
+		 ./srcs_bonus/validation.c \
+		 ./srcs_bonus/valid_map.c \
+		 ./srcs_bonus/bmp.c \
+		 ./srcs_bonus/key_handle.c \
+		 ./srcs_bonus/player_move.c \
+		 ./srcs_bonus/dda.c \
+		 ./srcs_bonus/draw_floor_ceil.c \
+		 ./srcs_bonus/draw_sprite_utils.c \
+		 ./srcs_bonus/draw_sprite.c \
+		 ./srcs_bonus/draw_wall.c \
+		 ./srcs_bonus/valid_key.c \
+		 ./srcs_bonus/valid_map_utils.c \
+		 ./srcs_bonus/arr_utils.c \
+		 ./srcs_bonus/main.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS_B = $(SRCS_B:.c=.o)
@@ -96,8 +119,10 @@ all : $(TARGET)
 $(TARGET) : $(OBJS)
 	$(CC) $(CFLAGS) $(LFLAGS) $(LIBS) -o $@ $^
 
-bonus : $(OBJS_B)
-	$(CC) $(CFLAGS) $(LFLAGS) $(LIBS) -o $(TARGET) $^
+bonus : $(TARGET_B)
+
+$(TARGET_B) : $(OBJS_B)
+	$(CC) $(CFLAGS) $(LFLAGS) $(LIBS) -o $@ $^
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ -c $<
@@ -106,6 +131,6 @@ clean :
 	$(RM) $(OBJS) $(OBJS_B)
 
 fclean : clean
-	$(RM) $(TARGET)
+	$(RM) $(TARGET) $(TARGET_B)
 
 re : fclean all

@@ -6,11 +6,11 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 12:22:17 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/29 16:48:37 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/29 20:09:02 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "../includes/cub3d_bonus.h"
 
 int				read_file_to_buf(char *map_file_path, t_str_arr *conf)
 {

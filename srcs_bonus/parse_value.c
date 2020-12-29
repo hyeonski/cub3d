@@ -6,11 +6,11 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 12:38:22 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/29 19:54:02 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/29 20:07:32 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "../includes/cub3d_bonus.h"
 
 int				load_texture(t_texture *texture, char *file_path)
 {

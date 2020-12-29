@@ -6,11 +6,11 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 12:52:33 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/29 18:22:04 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/29 20:00:50 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "cub3d_bonus.h"
 
 int			ft_list_strjoin(t_str_arr *str_arr, char *str)
 {
