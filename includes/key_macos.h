@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   key_macos.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyeonski <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/29 18:20:30 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/29 18:20:38 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/30 09:25:26 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,15 +61,15 @@
 # define KEY_NP_MUL 67
 # define KEY_NP_MIN 78
 # define KEY_NP_PLU 69
-# define KEY_NP_1	83
-# define KEY_NP_2	84
-# define KEY_NP_3	85
-# define KEY_NP_4	86
-# define KEY_NP_5	87
-# define KEY_NP_6	88
-# define KEY_NP_7	89
-# define KEY_NP_8	91
-# define KEY_NP_9	92
+# define KEY_NP_1 83
+# define KEY_NP_2 84
+# define KEY_NP_3 85
+# define KEY_NP_4 86
+# define KEY_NP_5 87
+# define KEY_NP_6 88
+# define KEY_NP_7 89
+# define KEY_NP_8 91
+# define KEY_NP_9 92
 
 /*
 ** Keyboard MISC

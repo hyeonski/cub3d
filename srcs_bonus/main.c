@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 14:51:47 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/29 21:00:12 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/30 09:52:24 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,11 @@ int			main(int ac, char **av)
 		draw_floor_ceil(&g_cub.window, &g_cub.player);
 		draw_wall(&g_cub, &g_cub.window);
 		draw_sprite(&g_cub);
-		if ((save_image_to_bmp_file(g_cub.window.buf,
-						g_cub.window.width, g_cub.window.height)) == -1)
-			return (0);
+		save_image_to_bmp_file(g_cub.window.buf,
+						g_cub.window.width, g_cub.window.height);
+		free_2d_arr((char **)g_cub.window.buf, g_cub.window.height);
+		free_2d_arr(g_cub.map.data, g_cub.map.height);
+		free_texture(g_cub.texture);
 	}
 	else
 		init_game(&g_cub);

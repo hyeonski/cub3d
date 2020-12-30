@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 12:38:22 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/29 19:54:02 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/30 10:07:51 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,20 @@ int				load_texture(t_texture *texture, char *file_path)
 {
 	int			tmp;
 	void		*imgptr;
+	int			*data;
 
 	imgptr = mlx_xpm_file_to_image(g_cub.mlx, file_path,
 			&texture->width, &texture->height);
 	if (!imgptr)
 		return (0);
-	texture->data = (int *)mlx_get_data_addr(imgptr, &tmp, &tmp, &tmp);
-	return (texture->data != 0);
+	data = (int *)mlx_get_data_addr(imgptr, &tmp, &tmp, &tmp);
+	if (data == NULL)
+		return (0);
+	texture->data = (int *)malloc(sizeof(int) *
+			texture->width * texture->height);
+	copy_img_data(texture->data, data, texture->width, texture->height);
+	mlx_destroy_image(g_cub.mlx, imgptr);
+	return (1);
 }
 
 int				set_texture(char *key, char *file_path)

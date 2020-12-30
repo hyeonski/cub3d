@@ -6,7 +6,7 @@
 /*   By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/29 18:18:08 by hyeonski          #+#    #+#             */
-/*   Updated: 2020/12/29 21:00:18 by hyeonski         ###   ########.fr       */
+/*   Updated: 2020/12/30 10:06:07 by hyeonski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,5 +308,11 @@ int					parse_value(char *key);
 ** Src is : ../srcs/draw_sprite_utils.c
 */
 int					compare_sprite_dist(t_sprite *lhs, t_sprite *rhs);
+
+/*
+** Src is : ../srcs/texture_utils.c
+*/
+void				free_texture(t_texture *texture);
+void				copy_img_data(int *dest, int *src, int width, int height);
 
 #endif

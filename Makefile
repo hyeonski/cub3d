@@ -6,7 +6,7 @@
 #    By: hyeonski <hyeonski@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/29 21:04:13 by hyeonski          #+#    #+#              #
-#    Updated: 2020/12/29 21:04:15 by hyeonski         ###   ########.fr        #
+#    Updated: 2020/12/30 10:03:22 by hyeonski         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,6 +63,7 @@ SRCS = ./libft/ft_memset.c \
 	   ./srcs/valid_key.c \
 	   ./srcs/valid_map_utils.c \
 	   ./srcs/arr_utils.c \
+	   ./srcs/texture_utils.c \
 	   ./srcs/main.c
 
 SRCS_B = ./libft/ft_memset.c \
@@ -109,6 +110,7 @@ SRCS_B = ./libft/ft_memset.c \
 		 ./srcs_bonus/valid_key.c \
 		 ./srcs_bonus/valid_map_utils.c \
 		 ./srcs_bonus/arr_utils.c \
+		 ./srcs_bonus/texture_utils.c \
 		 ./srcs_bonus/main.c
 
 OBJS = $(SRCS:.c=.o)
